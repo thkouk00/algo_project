@@ -3,7 +3,11 @@
 
 #include <iostream>
 #include <vector>
+#include <fstream>
+#include <sstream>
+#include <cmath>
 #include "../include/Buckets.h"
+#include "../include/normal_distr.h"
 
 class HashTable
 {
@@ -14,7 +18,7 @@ public:
 	~HashTable();
 	void insertPoint(int,std::string,std::vector<int>&);
 	void printBucket(int);
-	
+	void hashDataset(std::vector<std::vector<int>>&,int,int,int);
 };
 
 

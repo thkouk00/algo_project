@@ -5,6 +5,7 @@
 #include <fstream>
 #include <sstream>
 #include "../include/HashTable.h"
+#include "../include/general_functions.h"
 
 using namespace std;
 
@@ -18,7 +19,8 @@ int main(int argc, char const *argv[])
 	//default values
 	int k = 4;
 	int L = 5;
-	char * input_file = NULL;
+	int w = 4;
+	char *input_file = NULL;
 	char *query_file = NULL;
 	char *output_file = NULL;
 	// read arguments from command line
@@ -115,69 +117,73 @@ int main(int argc, char const *argv[])
 		cout <<str<<endl<<input_file<<endl;
 	}
 
+
 	//construct lsh
-	std::vector<int> test;
+	// std::vector<int> test;
 	int hashTable_lines = 0;
-    std::string line;
-    std::ifstream myfile(input_file);
-    while (std::getline(myfile, line))
-    {
-	    std::string stringvalues = line;
-		std::istringstream iss (stringvalues);
+	std::vector<std::vector<int>> dataset;
+	//store dataset in memory for faster access 
+	storeDataset(dataset, input_file, hashTable_lines);
+	std::cout <<endl<< "Number of lines in input file: " << hashTable_lines<<std::endl;;
 
-		int val;
-		iss >> val;
-		iss >> val;
-		// iss >> val;
-		// cout <<val<<endl;
-		// break;
-        if (hashTable_lines == 9998)
-        {	
-        	cout <<stringvalues<<endl;
-			while (!iss.eof())
-			{
-				cout <<"Inserting "<<val<<endl;
-				test.push_back(val);
-				// break;
-				iss >> val;
-				std::cout <<"EInai "<< val << ' ';
-			}
-		}
-        ++hashTable_lines;
-    }
-    std::cout <<"Size "<<test.size()<<std::endl;
-    // for (std::vector<int>::iterator it=test.begin();it!=test.end();it++ )
-    // 	cout <<*it<<endl;
+	cout <<"Ready to print"<<endl;
 
-
-    std::cout <<endl<< "Number of lines in input file: " << hashTable_lines<<std::endl;;
-
-
-
+	//print all elements of vector of vectors
+	// int count = 0;
+	// for(vector< vector<int> >::iterator row = dataset.begin(); row != dataset.end(); ++row)
+	// {
+	// 	count++;
+	// 	if (count != 5000)
+	// 		continue;
+	// 	for(vector<int>::iterator col = row->begin(); col != row->end(); ++col)
+	// 		cout << *col<<' ';
+	// 	cout <<std::endl; 
+	// }
+    
+    //number of buckets in each hash Table
+	int number_of_buckets = hashTable_lines/4;
 
     //create L hash_tables
-    // HashTable **hashTables;	
-    // hashTables = new HashTable*[L];
-    // for (int i=0;i<L;i++)
-    // 	hashTables[i] = new HashTable(hashTable_lines);
+    HashTable **hashTables;	
+    hashTables = new HashTable*[L];
+    for (int i=0;i<L;i++)
+    {
+    	hashTables[i] = new HashTable(number_of_buckets);
+    	hashTables[i]->hashDataset(dataset, k,w,i);
+    }
     
+
+    
+    //prin steilw to id to kanw metatropi se string
+    // std::string s = std::to_string(42);
+
     // string in="kalimera";
     // //test vectors
     // std::vector<int> v1={1,1,1,1};
-    // std::vector<int> v2={2,2,2,2};
+    // std::vector<int> v2={1,1,0,1};
+    // if (v1==v2)
+    // 	cout <<"Einai idia"<<endl;
+    // else
+    // 	cout <<"Einai diaforetika"<<std::endl;
     // std::vector<int> v3={3,3,3,3};
     // hashTables[1]->insertPoint(3, "43", v1);
     // hashTables[1]->insertPoint(3, in, v2);
     // in="kalinixta";
     // hashTables[1]->insertPoint(3, in, v3);
 
-    // hashTables[1]->printBucket(3);
+ //    hashTables[1]->insertPoint(3, "43", array[1]);
+	// hashTables[1]->insertPoint(3, "44", array[2]);
+ //    hashTables[1]->printBucket(3);
+
+ //    hashTables[0]->insertPoint(3, "40", array[1]);
+	// hashTables[0]->insertPoint(3, "41", array[2]);
+ //    hashTables[0]->printBucket(3);
     // hashTables[1]->printBucket(5);
 
     // hashTables[4]->insertPoint(5, in, v2);
     // hashTables[4]->printBucket(5);
 	
-
+    // ask user for query file and output file
 	// if (!query_file)
 	// {
 	// 	cout <<"Give query file: ";
@@ -200,11 +206,13 @@ int main(int argc, char const *argv[])
 
 
 	//free memory
-	// for (int i=0;i<L;i++)
-	// 	delete hashTables[i];
-	// delete[] hashTables;
+	for (int i=0;i<L;i++)
+		delete hashTables[i];
+	delete[] hashTables;
 
-	// free(input_file);
+	// delete[] array;
+
+	free(input_file);
 	// free(query_file);
 	// free(output_file);
 	return 0;

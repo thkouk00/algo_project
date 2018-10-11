@@ -13,7 +13,7 @@ class Buckets
 public:
 	Buckets(std::string,std::vector<int>&);
 	~Buckets(){};
-	void insertPointAtList(std::string,std::vector<int> &);
+	void insertPointAtList(std::string,std::vector<int> &); //,std::vector<int>
 	void printList();
 	
 };

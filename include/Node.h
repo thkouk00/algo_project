@@ -9,7 +9,8 @@ class Node
 {
 	// id int or string
 	std::string id;
-	std::vector<int> v;
+	std::vector<int> &p;
+	std::vector<int> g;
 
 public:
 	Node(std::string,std::vector<int>&);
