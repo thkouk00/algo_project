@@ -150,10 +150,14 @@ int main(int argc, char const *argv[])
     // for (int i=0;i<1;i++)
     {
     	hashTables[i] = new HashTable(number_of_buckets);
-    	hashTables[i]->hashDataset(dataset, k,w,i+1);
+    	hashTables[i]->hashDataset(dataset, k,w);
     }
     
-
+    cout <<"H2:"<<std::endl;
+    for (int i =0;i<number_of_buckets;i++)
+    	hashTables[1]->printBucket(i);
+    cout <<"H4:"<<std::endl;
+    hashTables[3]->printBucket(523);
     
     //prin steilw to id to kanw metatropi se string
     // std::string s = std::to_string(42);

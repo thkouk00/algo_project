@@ -36,9 +36,10 @@ void HashTable::printBucket(int bucket_num)
 		cout <<"Bucket not initialized"<<std::endl;
 }
 
-void HashTable::hashDataset(std::vector<std::vector<int>>& dataset,int k,int w,int id)
+void HashTable::hashDataset(std::vector<std::vector<int>>& dataset,int k,int w)
 {
 	//must find position of bucket first
+	int counter=0;
 	int fi;
 	int h;
 	double t;
@@ -65,6 +66,8 @@ void HashTable::hashDataset(std::vector<std::vector<int>>& dataset,int k,int w,i
 
 	for(vector< vector<int> >::iterator row = dataset.begin(); row != dataset.end(); ++row)
 	{
+		// unique id 
+		counter++;
 		// for(vector<int>::iterator col = row->begin(); col != row->end(); ++col)
 		// 	cout << *col<<' ';
 		// cout <<endl;
@@ -85,11 +88,9 @@ void HashTable::hashDataset(std::vector<std::vector<int>>& dataset,int k,int w,i
 				t = ((double)rand() / RAND_MAX) * w ;
 				// double in_product = std::inner_product(row->begin(), row->end(), v.begin(), 0);
 				double in_product = std::inner_product(v.begin(), v.end(), row->begin(), 0);
-				double prod;
-				cout <<"inner_product: "<<in_product<<std::endl;
 				//compute h(p)
 				h = ((in_product+t)/w);
-				cout <<"h= "<<h<<std::endl;
+				// cout <<"h= "<<h<<std::endl;
 				//no overflow
 				if (!check_overflow(h))
 				{	
@@ -107,13 +108,8 @@ void HashTable::hashDataset(std::vector<std::vector<int>>& dataset,int k,int w,i
 
 		//compute fi , num_of_buckets = tablesize/4
 		fi = (std::inner_product(g.begin(), g.end(), r.begin(), 0)%M)%this->num_of_buckets;
-		cout <<"FI= "<<fi<<std::endl;
-		cout <<"and "<<std::inner_product(r.begin(), r.end(), g.begin(), 0)<<std::endl;
-		cout <<"    **********"<<std::endl;
 		fi = abs(fi);
-		cout <<"FI2= "<<fi<<std::endl;
-		// if (fi<0)
-			// fi = fi*(-1);
+		// cout <<"FI= "<<fi<<std::endl;
 		//check for overflow
 		while (!check_overflow(fi))
 		{
@@ -129,8 +125,8 @@ void HashTable::hashDataset(std::vector<std::vector<int>>& dataset,int k,int w,i
 			if (fi < 0)
 				fi = abs(fi);
 		}
-		//insert point to hashTable at fi bucket
-		this->insertPoint(fi, std::to_string(id), *row);
+		//insert id and point to hashTable at fi bucket
+		this->insertPoint(fi, std::to_string(counter), *row);
 		g.erase(g.begin(), g.end());
 		// for(vector<int>::iterator col = row->begin(); col != row->end(); ++col)
 		// 	cout << *col<<' ';

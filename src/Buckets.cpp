@@ -16,6 +16,7 @@ void Buckets::insertPointAtList(string str,vector<int> &v)
 
 void Buckets::printList()
 {
+	// cout <<this->List.size()<<std::endl;
 	for (list<Node>::iterator it=List.begin();it!=this->List.end();it++)
 		it->printPoints();
 	// cout <<std::endl;
