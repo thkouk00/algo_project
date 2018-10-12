@@ -20,12 +20,12 @@ HashTable::~HashTable()
 	delete[] this->buckets;
 }
 
-void HashTable::insertPoint(int bucket_num,string id,vector<int> &v)
+void HashTable::insertPoint(int bucket_num,string id,vector<int> &v,std::vector<int> &g)
 {
 	if (!this->buckets[bucket_num])
-		this->buckets[bucket_num] = new Buckets(id,v);
+		this->buckets[bucket_num] = new Buckets(id,v,g);
 	else
-		this->buckets[bucket_num]->insertPointAtList(id,v);
+		this->buckets[bucket_num]->insertPointAtList(id,v,g);
 }
 
 void HashTable::printBucket(int bucket_num)
@@ -108,9 +108,12 @@ void HashTable::hashDataset(std::vector<std::vector<int>>& dataset,int k,int w)
 
 		//compute fi , num_of_buckets = tablesize/4
 		fi = (std::inner_product(g.begin(), g.end(), r.begin(), 0)%M)%this->num_of_buckets;
-		fi = abs(fi);
-		// cout <<"FI= "<<fi<<std::endl;
-		//check for overflow
+		// fi = abs(fi);
+		// make fi positive if not
+		if (fi<0)
+			fi = (((std::inner_product(g.begin(), g.end(), r.begin(), 0) % M + M) % M)%this->num_of_buckets);
+		cout <<"FI= "<<fi<<std::endl;
+		// check for overflow
 		while (!check_overflow(fi))
 		{
 			cout <<"**OVERFLOW**"<<std::endl;
@@ -123,10 +126,10 @@ void HashTable::hashDataset(std::vector<std::vector<int>>& dataset,int k,int w)
 			}
 			fi = ((std::inner_product(r.begin(), r.end(), g.begin(), 0))%M)%this->num_of_buckets;
 			if (fi < 0)
-				fi = abs(fi);
+				fi = (((std::inner_product(g.begin(), g.end(), r.begin(), 0) % M + M) % M)%this->num_of_buckets);
 		}
 		//insert id and point to hashTable at fi bucket
-		this->insertPoint(fi, std::to_string(counter), *row);
+		this->insertPoint(fi, std::to_string(counter), *row,g);
 		g.erase(g.begin(), g.end());
 		// for(vector<int>::iterator col = row->begin(); col != row->end(); ++col)
 		// 	cout << *col<<' ';

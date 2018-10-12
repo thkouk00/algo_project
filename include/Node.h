@@ -13,7 +13,7 @@ class Node
 	std::vector<int> g;
 
 public:
-	Node(std::string,std::vector<int>&);
+	Node(std::string,std::vector<int>&,std::vector<int>);
 	~Node(){};
 	void printPoints();
 	

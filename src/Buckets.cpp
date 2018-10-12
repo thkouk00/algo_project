@@ -2,15 +2,15 @@
 
 using namespace std;
 
-Buckets::Buckets(string str,vector<int> &v)
+Buckets::Buckets(string str,vector<int> &v,vector<int> &g)
 {
-	Node node(str,v);
+	Node node(str,v,g);
 	this->List.push_back(node);
 }
 
-void Buckets::insertPointAtList(string str,vector<int> &v)
+void Buckets::insertPointAtList(string str,vector<int> &v,vector<int> &g)
 {
-	Node node(str,v);
+	Node node(str,v,g);
 	this->List.push_back(node);
 }
 

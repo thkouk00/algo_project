@@ -1,9 +1,9 @@
 #include "../include/Node.h"
 using namespace std;
 
-Node::Node(string str,vector<int> &v):id(str),p(v)
+Node::Node(string str,vector<int> &v,std::vector<int> g):id(str),p(v)
 {
-	// this->v = v;
+	this->g = g;
 }
 
 void Node::printPoints()

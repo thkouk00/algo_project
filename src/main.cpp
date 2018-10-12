@@ -153,72 +153,42 @@ int main(int argc, char const *argv[])
     	hashTables[i]->hashDataset(dataset, k,w);
     }
     
-    cout <<"H2:"<<std::endl;
-    for (int i =0;i<number_of_buckets;i++)
-    	hashTables[1]->printBucket(i);
-    cout <<"H4:"<<std::endl;
-    hashTables[3]->printBucket(523);
-    
-    //prin steilw to id to kanw metatropi se string
-    // std::string s = std::to_string(42);
-
-    // string in="kalimera";
-    // //test vectors
-    // std::vector<int> v1={1,1,1,1};
-    // std::vector<int> v2={1,1,0,1};
-    // if (v1==v2)
-    // 	cout <<"Einai idia"<<endl;
-    // else
-    // 	cout <<"Einai diaforetika"<<std::endl;
-    // std::vector<int> v3={3,3,3,3};
-    // hashTables[1]->insertPoint(3, "43", v1);
-    // hashTables[1]->insertPoint(3, in, v2);
-    // in="kalinixta";
-    // hashTables[1]->insertPoint(3, in, v3);
-
- //    hashTables[1]->insertPoint(3, "43", array[1]);
-	// hashTables[1]->insertPoint(3, "44", array[2]);
- //    hashTables[1]->printBucket(3);
-
- //    hashTables[0]->insertPoint(3, "40", array[1]);
-	// hashTables[0]->insertPoint(3, "41", array[2]);
- //    hashTables[0]->printBucket(3);
-    // hashTables[1]->printBucket(5);
-
-    // hashTables[4]->insertPoint(5, in, v2);
-    // hashTables[4]->printBucket(5);
+    // cout <<"H2:"<<std::endl;
+    // for (int i =0;i<number_of_buckets;i++)
+    // 	hashTables[1]->printBucket(i);
+    // cout <<"H4:"<<std::endl;
+    // hashTables[3]->printBucket(523);
 	
-    // ask user for query file and output file
-	// if (!query_file)
-	// {
-	// 	cout <<"Give query file: ";
-	// 	cin >> str;
-	// 	query_file = (char *) malloc(str.length()+1);
-	// 	strcpy(query_file,str.c_str());
-	// 	cout <<str<<endl<<query_file<<endl;
-	// }
-	// if (!output_file)
-	// {
-	// 	cout <<"Give output file: ";
-	// 	cin >> str;
-	// 	output_file = (char *) malloc(str.length()+1);
-	// 	strcpy(output_file,str.c_str());
-	// 	cout <<str<<endl<<output_file<<endl;
-	// }
+	// ask user for query file and output file
+	if (!query_file)
+	{
+		cout <<"Give query file: ";
+		cin >> str;
+		query_file = (char *) malloc(str.length()+1);
+		strcpy(query_file,str.c_str());
+		cout <<str<<endl<<query_file<<endl;
+	}
+	if (!output_file)
+	{
+		cout <<"Give output file: ";
+		cin >> str;
+		output_file = (char *) malloc(str.length()+1);
+		strcpy(output_file,str.c_str());
+		cout <<str<<endl<<output_file<<endl;
+	}
+
+	//search in query
+
 
 	//ask user to rerun program or not 
 
-
-    //check because here seg fault
 	//free memory
 	for (int i=0;i<L;i++)
 		delete hashTables[i];
 	delete[] hashTables;
 
-	// delete[] array;
-
 	free(input_file);
-	// free(query_file);
-	// free(output_file);
+	free(query_file);
+	free(output_file);
 	return 0;
 }

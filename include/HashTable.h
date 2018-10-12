@@ -16,7 +16,7 @@ class HashTable
 public:
 	HashTable(int);
 	~HashTable();
-	void insertPoint(int,std::string,std::vector<int>&);
+	void insertPoint(int,std::string,std::vector<int>&,std::vector<int>&);
 	void printBucket(int);
 	void hashDataset(std::vector<std::vector<int>>&,int,int);
 };
