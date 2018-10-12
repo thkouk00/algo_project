@@ -147,9 +147,10 @@ int main(int argc, char const *argv[])
     HashTable **hashTables;	
     hashTables = new HashTable*[L];
     for (int i=0;i<L;i++)
+    // for (int i=0;i<1;i++)
     {
     	hashTables[i] = new HashTable(number_of_buckets);
-    	hashTables[i]->hashDataset(dataset, k,w,i);
+    	hashTables[i]->hashDataset(dataset, k,w,i+1);
     }
     
 
@@ -204,7 +205,7 @@ int main(int argc, char const *argv[])
 	//ask user to rerun program or not 
 
 
-
+    //check because here seg fault
 	//free memory
 	for (int i=0;i<L;i++)
 		delete hashTables[i];
