@@ -21,8 +21,6 @@ public:
 	int bucket_exist(int&);
 	Buckets* access_bucket(int&);
 	void hashDataset(std::vector<std::vector<int>>&, std::vector<int>&, int, int);
-	void Nearest_Neighbor(std::vector<int>&, long double&, std::vector<int>&, std::vector<int>&, int&, int&, int&);
-	void Range_Neighbor(std::vector<int>&,std::vector<int>&, int&);
 	
 	// template <typename T>
 	// long double Euclidean_Distance(const std::vector<T> & ,const std::vector<T> &, int&);

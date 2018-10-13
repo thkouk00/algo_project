@@ -12,10 +12,9 @@
 #include "../include/HashTable.h"
 #include "../include/normal_distr.h"
 #include "../include/NN_search.h"
-#include "../include/ApproxNN_search.h"
+#include "../include/Range_search.h"
 
 void storeDataset(std::vector<std::vector<int>>& ,char *,int &);
-// void search_neighbors(HashTable **, std::vector<int> &,char*, int&, int&, int&, int&);
 void search_neighbors(HashTable **, std::vector<int> &, char *, int&, int&, int&, int&);
 int find_hashFunction(std::vector<int>&, std::vector<int>&, std::vector<int> &, int&, int&, int&, int&);
 

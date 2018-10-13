@@ -94,6 +94,22 @@ void search_neighbors(HashTable **hashTables,std::vector<int> &r,char *query_fil
 
 		neighbor.erase(neighbor.begin(),neighbor.end());
 
+		int R = 52;
+		int c = 4; 
+		Range_search(neighbor,hashTables,g,query,fi,L,k,R,c);
+		// cout <<std::endl<<"-------------------------------Start Range_Search----------------------------------------"<<std::endl;
+		// cout <<"Dist is "<<dist<< endl;
+		// cout <<"NEIGHBOR:"<<std::endl;
+		// for (std::vector<int>::iterator it = neighbor.begin(); it!= neighbor.end(); it++)
+		// 	cout <<*it<<" ";
+		// cout <<std::endl;
+		// cout <<"QUERY:"<<std::endl;
+		// for (std::vector<int>::iterator it = query.begin(); it!= query.end(); it++)
+		// 	cout <<*it<<" ";
+		// cout <<std::endl<<"--------------------------------End Range_Search----------------------------------------"<<std::endl;
+
+		neighbor.erase(neighbor.begin(),neighbor.end());
+
 		query.erase(query.begin(),query.end());
 	}
 

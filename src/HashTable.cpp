@@ -46,7 +46,10 @@ int HashTable::bucket_exist(int &fi)
 
 Buckets* HashTable::access_bucket(int &position)
 {
-	return this->buckets[position];
+	if (this->buckets[position])
+		return this->buckets[position];
+	else
+		return (Buckets*)-1;
 }
 
 void HashTable::hashDataset(std::vector<std::vector<int>>& dataset, std::vector<int> &r, int k, int w)
@@ -150,55 +153,6 @@ void HashTable::hashDataset(std::vector<std::vector<int>>& dataset, std::vector<
 		// break;
 	}
 }
-
-void HashTable::Nearest_Neighbor(std::vector<int> &b, long double &db,std::vector<int> &query, std::vector<int> &g, int &fi, int &k, int &L)
-{
-	int counter=0;
-	long double dist=0;
-	// std::vector<int> b;
-	// long double db = 9999999.0;
-	// this->buckets[fi]->bucket_size();
-	cout <<"Nearest Neighbor print for fi  "<<fi<<std::endl;
-	if (this->buckets[fi])
-	{
-		cout <<"MPIKa"<<std::endl;
-		for (list<Node>::iterator it=this->buckets[fi]->List.begin();it!=this->buckets[fi]->List.end();it++)
-		{
-			// cout <<"Compare g "<<std::endl;
-			// if (g != it->get_g())
-			// 	continue;
-			// cout <<"Idia g"<<std::endl;
-
-			// trick
-			counter++;
-			if (counter > 3*L)
-			{
-				cout <<"Trick with dist "<<dist<<std::endl;
-				break;
-				// return b;
-			}
-			
-			// dist = this->Euclidean_Distance(query,it->get_p(),k);
-			cout <<"Dist is "<<dist<<std::endl;
-			if (dist < db)
-			{
-				cout <<"Changing d from "<<db<<" to "<<dist<<std::endl;
-				if (b.size()>0)
-					b.erase(b.begin(),b.end());
-				b = it->get_p();
-				db = dist;
-			}
-		}
-		cout <<"Min dist is "<<db<<std::endl;
-		// return b;
-	}
-}
-
-void HashTable::Range_Neighbor(std::vector<int> &query, std::vector<int> &g, int &fi)
-{
-
-}	
-
 
 // long double HashTable::Euclidean_Distance(const std::vector<int> & v1,const std::vector<int> &v2,int &k)
 // {

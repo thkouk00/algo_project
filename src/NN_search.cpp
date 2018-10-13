@@ -21,11 +21,13 @@ void NN_search(std::vector<int> &neighbor, HashTable **hashTables, std::vector<s
 		tmpg = g[i];
 		if (!hashTables[i]->bucket_exist(tmpfi))
 		{
-			cout <<"*****MPIKA*****"<<std::endl;
+			cout <<"*****MPIKA BUCKET DONT EXIST*****"<<std::endl;
 			continue;
 		}
 		cout <<"MPAINW BUCKET"<<std::endl;
 		Buckets* bucket =  hashTables[i]->access_bucket(tmpfi);
+		if (bucket == (Buckets*)-1)
+			continue;
 		list<Node> List = bucket->access_list();
 		for (std::list<Node>::iterator it = List.begin(); it!=List.end(); it++)
 		{
