@@ -63,7 +63,7 @@ void search_neighbors(HashTable **hashTables,std::vector<int> &r,char *query_fil
 
 		// Range_search(hashTables);
 		// ApproxNN_search(neighbor,hashTables,g,query,fi,L,k,dist);
-		NN_search(neighbor,hashTables,g,query,fi,L,k,dist);
+		NN_search(neighbor,hashTables,g,query,fi,L,k,dist,1);
 
 		cout <<std::endl<<"-------------------------------Start NN_Search----------------------------------------"<<std::endl;
 		cout <<"Dist is "<<dist<< endl;
@@ -80,7 +80,7 @@ void search_neighbors(HashTable **hashTables,std::vector<int> &r,char *query_fil
 		
 
 
-		ApproxNN_search(neighbor,hashTables,g,query,fi,L,k,dist);
+		NN_search(neighbor,hashTables,g,query,fi,L,k,dist,0);
 		cout <<std::endl<<"-------------------------------Start ApproxNN_Search----------------------------------------"<<std::endl;
 		cout <<"Dist is "<<dist<< endl;
 		cout <<"NEIGHBOR:"<<std::endl;

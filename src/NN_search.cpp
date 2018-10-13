@@ -3,9 +3,9 @@
 using namespace std;
 
 
-void NN_search(std::vector<int> &neighbor, HashTable **hashTables, std::vector<std::vector<int>> &g, std::vector<int> &query, std::vector<int> &fi, int &L, int &k, long double &dist)
+void NN_search(std::vector<int> &neighbor, HashTable **hashTables, std::vector<std::vector<int>> &g, std::vector<int> &query, std::vector<int> &fi, int &L, int &k, long double &dist, bool flag)
 {
-	// int counter = 0;
+	int counter = 0;
 	int tmpfi;
 	long double distance;
 	std::vector<int> tmpg;
@@ -34,14 +34,19 @@ void NN_search(std::vector<int> &neighbor, HashTable **hashTables, std::vector<s
 			// if (tmpg != it->get_g())
 			// 	continue;
 			
-			// counter++;
-			// if (counter == 3*L)
-			// {
-			// 	cout <<"Trick used"<<std::endl;
-			// 	//trick , finish and right result to output
-			// 	neighbor = b;
-			// 	dist = db;
-			// }
+			//ApproxNN_search
+			if (!flag)
+			{
+				counter++;
+				if (counter == 3*L)
+				{
+					cout <<"Trick used"<<std::endl;
+					//trick , finish and right result to output
+					neighbor = b;
+					dist = db;
+					exit(1);
+				}
+			}
 			
 			if ((distance = Euclidean_Distance(query,p,k)) < db)
 			{
@@ -49,6 +54,8 @@ void NN_search(std::vector<int> &neighbor, HashTable **hashTables, std::vector<s
 				db = distance;
 			}
 		}
+		if (!flag)
+			break;
 	}
 	neighbor = b;
 	dist = db;

@@ -11,6 +11,6 @@
 #include "../include/Buckets.h"
 #include "../include/Euclidean_distance.h"
 
-void NN_search(std::vector<int>&, HashTable **, std::vector<std::vector<int>>&, std::vector<int>&, std::vector<int>&, int&, int&, long double&);
+void NN_search(std::vector<int>&, HashTable **, std::vector<std::vector<int>>&, std::vector<int>&, std::vector<int>&, int&, int&, long double&, bool);
 
 #endif
