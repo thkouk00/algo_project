@@ -80,16 +80,27 @@ void search_neighbors(HashTable **hashTables,std::vector<int> &r,char *query_fil
 			// for (std::vector<int>::iterator it = neighbor.begin(); it!= neighbor.end(); it++)
 			// 	cout <<*it<<" ";
 			// cout <<std::endl;
-			cout <<"QUERY:"<<std::endl;
-			for (std::vector<int>::iterator it = query.begin(); it!= query.end(); it++)
-				cout <<*it<<" ";
-			cout <<std::endl;
+			// cout <<"QUERY:"<<std::endl;
+			// for (std::vector<int>::iterator it = query.begin(); it!= query.end(); it++)
+			// 	cout <<*it<<" ";
+			// cout <<std::endl;
 			// cout <<std::endl;
 			// Range
 			// NN	
 			g.erase(g.begin(),g.end());
 		}
+		cout <<std::endl<<"-------------------------------Start----------------------------------------"<<std::endl;
+		cout <<"NEIGHBOR:"<<std::endl;
+		for (std::vector<int>::iterator it = neighbor.begin(); it!= neighbor.end(); it++)
+			cout <<*it<<" ";
+		cout <<std::endl;
+		cout <<"QUERY:"<<std::endl;
+		for (std::vector<int>::iterator it = query.begin(); it!= query.end(); it++)
+			cout <<*it<<" ";
+		cout <<std::endl<<"--------------------------------End----------------------------------------"<<std::endl;
 		
+		neighbor.erase(neighbor.begin(),neighbor.end());
+		db = 9999999.0;
 		// break;
 
 		//empty vector for next query

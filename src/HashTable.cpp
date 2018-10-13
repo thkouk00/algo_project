@@ -169,7 +169,7 @@ void HashTable::Nearest_Neighbor(std::vector<int> &b, long double &db,std::vecto
 			if (counter > 3*L)
 			{
 				cout <<"Trick with dist "<<dist<<std::endl;
-				exit(1);
+				break;
 				// return b;
 			}
 			
@@ -178,6 +178,8 @@ void HashTable::Nearest_Neighbor(std::vector<int> &b, long double &db,std::vecto
 			if (dist < db)
 			{
 				cout <<"Changing d from "<<db<<" to "<<dist<<std::endl;
+				if (b.size()>0)
+					b.erase(b.begin(),b.end());
 				b = it->get_p();
 				db = dist;
 			}
