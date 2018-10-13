@@ -21,3 +21,8 @@ void Buckets::printList()
 		it->printPoints();
 	// cout <<std::endl;
 }
+
+void Buckets::bucket_size()
+{
+	cout <<this->List.size()<<std::endl;
+}

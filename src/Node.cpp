@@ -13,3 +13,13 @@ void Node::printPoints()
 		cout <<*it<<" ";
 	cout <<endl;
 }
+
+std::vector<int> Node::get_p()
+{
+	return this->p;
+}
+
+std::vector<int> Node::get_g()
+{
+	return this->g;
+}

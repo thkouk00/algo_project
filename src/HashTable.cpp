@@ -36,7 +36,15 @@ void HashTable::printBucket(int bucket_num)
 		cout <<"Bucket not initialized"<<std::endl;
 }
 
-void HashTable::hashDataset(std::vector<std::vector<int>>& dataset,int k,int w)
+int HashTable::bucket_exist(int &fi)
+{
+	if (this->buckets[fi])
+		return 1;
+	else
+		return -1;
+}
+
+void HashTable::hashDataset(std::vector<std::vector<int>>& dataset, std::vector<int> &r, int k, int w)
 {
 	//must find position of bucket first
 	int counter=0;
@@ -46,7 +54,7 @@ void HashTable::hashDataset(std::vector<std::vector<int>>& dataset,int k,int w)
 	std::vector<double> v;
 	//holds all values from h
 	std::vector<int> g;
-	std::vector<int> r;
+	// std::vector<int> r;
 	int M = (int)(pow(2, 32)) - 5;
 		
 
@@ -54,15 +62,15 @@ void HashTable::hashDataset(std::vector<std::vector<int>>& dataset,int k,int w)
 	std::srand(std::time(nullptr)); 
 	
 	//randomly pick k numbers for r , these values are same for every entry
-	for (int i=0;i<k;i++)
-	{
-		int num = rand() % 100000 + (-100000);
-		r.push_back(num);
-	}
+	// for (int i=0;i<k;i++)
+	// {
+	// 	int num = rand() % 100000 + (-100000);
+	// 	r.push_back(num);
+	// }
 	
-	for (std::vector<int>::iterator t=r.begin();t!=r.end();t++)
-		cout <<*t<<' ';
-	cout <<std::endl;
+	// for (std::vector<int>::iterator t=r.begin();t!=r.end();t++)
+	// 	cout <<*t<<' ';
+	// cout <<std::endl;
 
 	for(vector< vector<int> >::iterator row = dataset.begin(); row != dataset.end(); ++row)
 	{
@@ -112,22 +120,22 @@ void HashTable::hashDataset(std::vector<std::vector<int>>& dataset,int k,int w)
 		// make fi positive if not
 		if (fi<0)
 			fi = (((std::inner_product(g.begin(), g.end(), r.begin(), 0) % M + M) % M)%this->num_of_buckets);
-		cout <<"FI= "<<fi<<std::endl;
+		// cout <<"FI= "<<fi<<std::endl;
 		// check for overflow
-		while (!check_overflow(fi))
-		{
-			cout <<"**OVERFLOW**"<<std::endl;
-			r.erase(r.begin(), r.end());
-			for (int i=0;i<k;i++)
-			{
-				//rand between [0,100000) to avoid overflow again
-				int num = rand() % 1000;
-				r.push_back(num);
-			}
-			fi = ((std::inner_product(r.begin(), r.end(), g.begin(), 0))%M)%this->num_of_buckets;
-			if (fi < 0)
-				fi = (((std::inner_product(g.begin(), g.end(), r.begin(), 0) % M + M) % M)%this->num_of_buckets);
-		}
+		// while (!check_overflow(fi))
+		// {
+		// 	cout <<"**OVERFLOW**"<<std::endl;
+		// 	r.erase(r.begin(), r.end());
+		// 	for (int i=0;i<k;i++)
+		// 	{
+		// 		//rand between [0,100000) to avoid overflow again
+		// 		int num = rand() % 1000;
+		// 		r.push_back(num);
+		// 	}
+		// 	fi = ((std::inner_product(r.begin(), r.end(), g.begin(), 0))%M)%this->num_of_buckets;
+		// 	if (fi < 0)
+		// 		fi = (((std::inner_product(g.begin(), g.end(), r.begin(), 0) % M + M) % M)%this->num_of_buckets);
+		// }
 		//insert id and point to hashTable at fi bucket
 		this->insertPoint(fi, std::to_string(counter), *row,g);
 		g.erase(g.begin(), g.end());
@@ -137,3 +145,69 @@ void HashTable::hashDataset(std::vector<std::vector<int>>& dataset,int k,int w)
 		// break;
 	}
 }
+
+void HashTable::Nearest_Neighbor(std::vector<int> &b, long double &db,std::vector<int> &query, std::vector<int> &g, int &fi, int &k, int &L)
+{
+	int counter=0;
+	long double dist=0;
+	// std::vector<int> b;
+	// long double db = 9999999.0;
+	// this->buckets[fi]->bucket_size();
+	cout <<"Nearest Neighbor print for fi  "<<fi<<std::endl;
+	if (this->buckets[fi])
+	{
+		cout <<"MPIKa"<<std::endl;
+		for (list<Node>::iterator it=this->buckets[fi]->List.begin();it!=this->buckets[fi]->List.end();it++)
+		{
+			// cout <<"Compare g "<<std::endl;
+			// if (g != it->get_g())
+			// 	continue;
+			// cout <<"Idia g"<<std::endl;
+
+			// trick
+			counter++;
+			if (counter > 3*L)
+			{
+				cout <<"Trick with dist "<<dist<<std::endl;
+				exit(1);
+				// return b;
+			}
+			
+			dist = this->Euclidean_Distance(query,it->get_p(),k);
+			cout <<"Dist is "<<dist<<std::endl;
+			if (dist < db)
+			{
+				cout <<"Changing d from "<<db<<" to "<<dist<<std::endl;
+				b = it->get_p();
+				db = dist;
+			}
+		}
+		cout <<"Min dist is "<<db<<std::endl;
+		// return b;
+	}
+}
+
+void HashTable::Range_Neighbor(std::vector<int> &query, std::vector<int> &g, int &fi)
+{
+
+}	
+
+
+long double HashTable::Euclidean_Distance(const std::vector<int> & v1,const std::vector<int> &v2,int &k)
+{
+ 	long double sum = 0;
+ 	for(unsigned int i = 0;i<v1.size();i++){
+ 		sum += pow((v1[i] - v2[i]),k);
+ 	}
+ 	return pow(sum,1.0/k);
+};
+
+// template <typename T>
+// long double HashTable::Euclidean_Distance(const std::vector<T> & v1,const std::vector<T> &v2,int &k)
+// {
+//  	long double sum = 0;
+//  	for(unsigned int i = 0;i<v1.size();i++){
+//  		sum += pow((v1[i] - v2[i]),k);
+//  	}
+//  	return pow(sum,1.0/k);
+// };

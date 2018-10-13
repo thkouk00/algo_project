@@ -142,6 +142,16 @@ int main(int argc, char const *argv[])
     
     //number of buckets in each hash Table
 	int number_of_buckets = hashTable_lines/4;
+	std::vector<int> r;
+	
+    // use current time as seed for random generator
+	std::srand(std::time(nullptr)); 
+	//randomly pick k numbers for r , these values are same for every entry
+	for (int i=0;i<k;i++)
+	{
+		int num = rand() % 100000 + (-100000);
+		r.push_back(num);
+	}
 
     //create L hash_tables
     HashTable **hashTables;	
@@ -150,7 +160,7 @@ int main(int argc, char const *argv[])
     // for (int i=0;i<1;i++)
     {
     	hashTables[i] = new HashTable(number_of_buckets);
-    	hashTables[i]->hashDataset(dataset, k,w);
+    	hashTables[i]->hashDataset(dataset,r,k,w);
     }
     
     // cout <<"H2:"<<std::endl;
@@ -178,7 +188,7 @@ int main(int argc, char const *argv[])
 	}
 
 	//search in query
-
+	search_neighbors(hashTables,r,query_file,L,k,w,number_of_buckets);
 
 	//ask user to rerun program or not 
 

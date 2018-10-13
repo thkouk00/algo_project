@@ -15,7 +15,9 @@ public:
 	~Buckets(){};
 	void insertPointAtList(std::string,std::vector<int> &,std::vector<int> &);
 	void printList();
+	void bucket_size();
 	
+	friend class HashTable;
 };
 
 

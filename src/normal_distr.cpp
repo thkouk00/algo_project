@@ -13,7 +13,7 @@ int check_overflow(int num)
       return 1; 
 } 
 
-
+//give vector v to fill with random numbers in normal distribution
 void normal_distr_generator(std::vector<double> &v,int elements)
 {
   unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
@@ -24,23 +24,6 @@ void normal_distr_generator(std::vector<double> &v,int elements)
   {
     double number = distribution(generator);
     v.push_back(number);
-    // std::cout << number<<std::endl;
-    // if (j<4)
-    // {
-    //   v.push_back(number);
-    //   j++;
-    // }
-    // else
-    // {
-    //   for (int it = 0;it<v.size();it++)
-    //   { 
-    //     cout <<v[it]<<" ";
-    //   }
-    //   cout <<std::endl;
-    //   j=0;
-    //   v.erase(v.begin(),v.end());
-    // }
-    // if ((number>=0.0)&&(number<10.0)) ++p[int(number)];
   }
 }
 

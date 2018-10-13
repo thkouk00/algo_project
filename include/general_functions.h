@@ -8,7 +8,12 @@
 #include <stdlib.h>
 #include <fstream>
 #include <sstream>
+#include <cmath>
+#include "../include/HashTable.h"
+#include "../include/normal_distr.h"
 
 void storeDataset(std::vector<std::vector<int>>& ,char *,int &);
+void search_neighbors(HashTable **, std::vector<int> &,char*, int&, int&, int&, int&);
+int find_hashFunction(std::vector<int>&, std::vector<int>&, std::vector<int> &, int&, int&, int&);
 
 #endif

@@ -16,6 +16,8 @@ public:
 	Node(std::string,std::vector<int>&,std::vector<int>);
 	~Node(){};
 	void printPoints();
+	std::vector<int> get_p();
+	std::vector<int> get_g();
 	
 };
 
