@@ -16,6 +16,7 @@ public:
 	void insertPointAtList(std::string,std::vector<int> &,std::vector<int> &);
 	void printList();
 	void bucket_size();
+	std::list<Node> access_list();
 	
 	friend class HashTable;
 };

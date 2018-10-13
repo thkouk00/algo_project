@@ -187,9 +187,9 @@ int main(int argc, char const *argv[])
 		cout <<str<<endl<<output_file<<endl;
 	}
 
-	//search in query
+	//search neighbors from query_file
+	// search_neighbors(hashTables,r,query_file,L,k,w,number_of_buckets);
 	search_neighbors(hashTables,r,query_file,L,k,w,number_of_buckets);
-
 	//ask user to rerun program or not 
 
 	//free memory

@@ -44,6 +44,11 @@ int HashTable::bucket_exist(int &fi)
 		return -1;
 }
 
+Buckets* HashTable::access_bucket(int &position)
+{
+	return this->buckets[position];
+}
+
 void HashTable::hashDataset(std::vector<std::vector<int>>& dataset, std::vector<int> &r, int k, int w)
 {
 	//must find position of bucket first
@@ -173,7 +178,7 @@ void HashTable::Nearest_Neighbor(std::vector<int> &b, long double &db,std::vecto
 				// return b;
 			}
 			
-			dist = this->Euclidean_Distance(query,it->get_p(),k);
+			// dist = this->Euclidean_Distance(query,it->get_p(),k);
 			cout <<"Dist is "<<dist<<std::endl;
 			if (dist < db)
 			{
@@ -195,14 +200,14 @@ void HashTable::Range_Neighbor(std::vector<int> &query, std::vector<int> &g, int
 }	
 
 
-long double HashTable::Euclidean_Distance(const std::vector<int> & v1,const std::vector<int> &v2,int &k)
-{
- 	long double sum = 0;
- 	for(unsigned int i = 0;i<v1.size();i++){
- 		sum += pow((v1[i] - v2[i]),k);
- 	}
- 	return pow(sum,1.0/k);
-};
+// long double HashTable::Euclidean_Distance(const std::vector<int> & v1,const std::vector<int> &v2,int &k)
+// {
+//  	long double sum = 0;
+//  	for(unsigned int i = 0;i<v1.size();i++){
+//  		sum += pow((v1[i] - v2[i]),k);
+//  	}
+//  	return pow(sum,1.0/k);
+// };
 
 // template <typename T>
 // long double HashTable::Euclidean_Distance(const std::vector<T> & v1,const std::vector<T> &v2,int &k)

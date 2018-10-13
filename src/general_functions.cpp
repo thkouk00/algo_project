@@ -2,7 +2,7 @@
 
 using namespace std;
 
-
+//stores Dataset and QuerySet
 void storeDataset(std::vector<std::vector<int>>& dataset,char *input_file,int &hashTable_lines)
 {
 	// int hashTable_lines = 0;
@@ -29,18 +29,15 @@ void storeDataset(std::vector<std::vector<int>>& dataset,char *input_file,int &h
 
 void search_neighbors(HashTable **hashTables,std::vector<int> &r,char *query_file,int &L,int &k,int &w, int &num_of_buckets)
 {
-	int fi;
-	int R;
-	int count=0;
+	int tmpfi;
+	long double dist = 0;
+	std::vector<int> neighbor; 
+	std::vector<int> fi;
+	std::vector<int> query;
+	std::vector<int> tmpg; 
+	std::vector<std::vector<int>> g;
 	std::string line;
     std::ifstream myfile(query_file);
-    std::vector<int> g;
-    std::vector<int> query;
-    std::vector<int> neighbor;
-    long double db = 9999999.0;
-
-    cout <<"SEARCH NEIGHBORS"<<std::endl;
-    //for loop for every hashTable
     while (std::getline(myfile, line))
     {
 	    std::string stringvalues = line;
@@ -54,42 +51,22 @@ void search_neighbors(HashTable **hashTables,std::vector<int> &r,char *query_fil
 			query.push_back(val);
 			iss >> val;
 		}
-		// in case there is R at first line
-		// if (count == 0)
-		// {
-		// 	R = val;
-		// 	count++;
-		// }
-		// else
-		
+
+		// create L*fi hashFunctions and L*g Functions for every query
 		for (int i=0;i<L;i++)
 		{
-			cout <<"Loop "<<i<<" neighbor is "<<std::endl;
-			//bucket position
-			fi = find_hashFunction(g,query,r,k,w,num_of_buckets);
-			cout <<"FI is "<<fi<<std::endl;
-			if (!hashTables[i]->bucket_exist(fi))
-			{
-				cout <<"NOT EXIST"<<std::endl;
-				g.erase(g.begin(),g.end());
-				continue;
-			}
-			hashTables[i]->Nearest_Neighbor(neighbor, db, query, g, fi,k,L);
-			// cout <<"Size of neigh "<<neighbor.size()<<std::endl;
-			// cout <<"NEIGHBOR:"<<std::endl;
-			// for (std::vector<int>::iterator it = neighbor.begin(); it!= neighbor.end(); it++)
-			// 	cout <<*it<<" ";
-			// cout <<std::endl;
-			// cout <<"QUERY:"<<std::endl;
-			// for (std::vector<int>::iterator it = query.begin(); it!= query.end(); it++)
-			// 	cout <<*it<<" ";
-			// cout <<std::endl;
-			// cout <<std::endl;
-			// Range
-			// NN	
-			g.erase(g.begin(),g.end());
+			find_hashFunction(tmpg, query, r, k, w, num_of_buckets, tmpfi);
+			g.push_back(tmpg);
+			fi.push_back(tmpfi);
+			tmpg.erase(tmpg.begin(),tmpg.end());
 		}
-		cout <<std::endl<<"-------------------------------Start----------------------------------------"<<std::endl;
+
+		// Range_search(hashTables);
+		// ApproxNN_search(neighbor,hashTables,g,query,fi,L,k,dist);
+		NN_search(neighbor,hashTables,g,query,fi,L,k,dist);
+
+		cout <<std::endl<<"-------------------------------Start NN_Search----------------------------------------"<<std::endl;
+		cout <<"Dist is "<<dist<< endl;
 		cout <<"NEIGHBOR:"<<std::endl;
 		for (std::vector<int>::iterator it = neighbor.begin(); it!= neighbor.end(); it++)
 			cout <<*it<<" ";
@@ -97,21 +74,35 @@ void search_neighbors(HashTable **hashTables,std::vector<int> &r,char *query_fil
 		cout <<"QUERY:"<<std::endl;
 		for (std::vector<int>::iterator it = query.begin(); it!= query.end(); it++)
 			cout <<*it<<" ";
-		cout <<std::endl<<"--------------------------------End----------------------------------------"<<std::endl;
-		
-		neighbor.erase(neighbor.begin(),neighbor.end());
-		db = 9999999.0;
-		// break;
+		cout <<std::endl<<"--------------------------------End NN_Search----------------------------------------"<<std::endl;
 
-		//empty vector for next query
+		neighbor.erase(neighbor.begin(),neighbor.end());
+		
+
+
+		ApproxNN_search(neighbor,hashTables,g,query,fi,L,k,dist);
+		cout <<std::endl<<"-------------------------------Start ApproxNN_Search----------------------------------------"<<std::endl;
+		cout <<"Dist is "<<dist<< endl;
+		cout <<"NEIGHBOR:"<<std::endl;
+		for (std::vector<int>::iterator it = neighbor.begin(); it!= neighbor.end(); it++)
+			cout <<*it<<" ";
+		cout <<std::endl;
+		cout <<"QUERY:"<<std::endl;
+		for (std::vector<int>::iterator it = query.begin(); it!= query.end(); it++)
+			cout <<*it<<" ";
+		cout <<std::endl<<"--------------------------------End ApproxNN_Search----------------------------------------"<<std::endl;
+
+		neighbor.erase(neighbor.begin(),neighbor.end());
+
 		query.erase(query.begin(),query.end());
-    }
+	}
+
 }
 
-int find_hashFunction(std::vector<int> &g, std::vector<int> &query, std::vector<int> &r, int &k, int &w, int &num_of_buckets)
+int find_hashFunction(std::vector<int> &g, std::vector<int> &query, std::vector<int> &r, int &k, int &w, int &num_of_buckets, int &fi)
 {
 	int counter=0;
-	int fi;
+	// int fi;
 	int h;
 	double t;
 	std::vector<double> v;
@@ -154,3 +145,86 @@ int find_hashFunction(std::vector<int> &g, std::vector<int> &query, std::vector<
 		fi = (((std::inner_product(g.begin(), g.end(), r.begin(), 0) % M + M) % M)%num_of_buckets);
 	return fi;
 }
+
+
+// void search_neighbors(HashTable **hashTables,std::vector<int> &r,char *query_file,int &L,int &k,int &w, int &num_of_buckets)
+// {
+// 	int fi;
+// 	int R;
+// 	int count=0;
+// 	std::string line;
+//     std::ifstream myfile(query_file);
+//     std::vector<int> g;
+//     std::vector<int> query;
+//     std::vector<int> neighbor;
+//     long double db = 9999999.0;
+
+//     cout <<"SEARCH NEIGHBORS"<<std::endl;
+//     //for loop for every hashTable
+//     while (std::getline(myfile, line))
+//     {
+// 	    std::string stringvalues = line;
+// 		std::istringstream iss (stringvalues);
+
+// 		int val;
+// 		iss >> val;
+	
+// 		while (!iss.eof())
+// 		{
+// 			query.push_back(val);
+// 			iss >> val;
+// 		}
+// 		// in case there is R at first line
+// 		// if (count == 0)
+// 		// {
+// 		// 	R = val;
+// 		// 	count++;
+// 		// }
+// 		// else
+		
+// 		for (int i=0;i<L;i++)
+// 		{
+// 			cout <<"Loop "<<i<<" neighbor is "<<std::endl;
+// 			//bucket position
+// 			fi = find_hashFunction(g,query,r,k,w,num_of_buckets);
+// 			cout <<"FI is "<<fi<<std::endl;
+// 			if (!hashTables[i]->bucket_exist(fi))
+// 			{
+// 				cout <<"NOT EXIST"<<std::endl;
+// 				g.erase(g.begin(),g.end());
+// 				continue;
+// 			}
+// 			hashTables[i]->Nearest_Neighbor(neighbor, db, query, g, fi,k,L);
+			
+// 			// cout <<"Size of neigh "<<neighbor.size()<<std::endl;
+// 			// cout <<"NEIGHBOR:"<<std::endl;
+// 			// for (std::vector<int>::iterator it = neighbor.begin(); it!= neighbor.end(); it++)
+// 			// 	cout <<*it<<" ";
+// 			// cout <<std::endl;
+// 			// cout <<"QUERY:"<<std::endl;
+// 			// for (std::vector<int>::iterator it = query.begin(); it!= query.end(); it++)
+// 			// 	cout <<*it<<" ";
+// 			// cout <<std::endl;
+// 			// cout <<std::endl;
+// 			// Range
+// 			// NN	
+// 			g.erase(g.begin(),g.end());
+// 		}
+// 		cout <<std::endl<<"-------------------------------Start----------------------------------------"<<std::endl;
+// 		cout <<"NEIGHBOR:"<<std::endl;
+// 		for (std::vector<int>::iterator it = neighbor.begin(); it!= neighbor.end(); it++)
+// 			cout <<*it<<" ";
+// 		cout <<std::endl;
+// 		cout <<"QUERY:"<<std::endl;
+// 		for (std::vector<int>::iterator it = query.begin(); it!= query.end(); it++)
+// 			cout <<*it<<" ";
+// 		cout <<std::endl<<"--------------------------------End----------------------------------------"<<std::endl;
+		
+// 		neighbor.erase(neighbor.begin(),neighbor.end());
+// 		db = 9999999.0;
+// 		// break;
+
+// 		//empty vector for next query
+// 		query.erase(query.begin(),query.end());
+//     }
+// }

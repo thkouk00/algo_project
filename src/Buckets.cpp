@@ -26,3 +26,8 @@ void Buckets::bucket_size()
 {
 	cout <<this->List.size()<<std::endl;
 }
+
+std::list<Node> Buckets::access_list()
+{
+	return this->List;
+}
