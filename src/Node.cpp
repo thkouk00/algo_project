@@ -14,7 +14,7 @@ void Node::printPoints()
 	cout <<endl;
 }
 
-std::vector<int> Node::get_p()
+std::vector<int>& Node::get_p()
 {
 	return this->p;
 }

@@ -3,14 +3,14 @@
 using namespace std;
 
 //stores Dataset and QuerySet
-void storeDataset(std::vector<std::vector<int>>& dataset,char *input_file,int &hashTable_lines)
+void storeDataset(std::vector<std::vector<int>> &dataset,char *input_file,int &hashTable_lines)
 {
-	// int hashTable_lines = 0;
     std::string line;
     std::ifstream myfile(input_file);
-    std::vector<int> tmpv;
+    // std::vector<int> tmpv;
     while (std::getline(myfile, line))
     {
+    	std::vector<int> tmpv;
 	    std::string stringvalues = line;
 		std::istringstream iss (stringvalues);
 
@@ -22,6 +22,10 @@ void storeDataset(std::vector<std::vector<int>>& dataset,char *input_file,int &h
 			iss >> val;
 		}
 		dataset.push_back(tmpv);
+		cout <<"**********START INFO**********"<<std::endl;
+		cout <<"Size dataset: "<<dataset.size()<<std::endl;
+		cout <<"Size tmpv: "<<tmpv.size()<<" and line "<<hashTable_lines+1<<std::endl; 
+		cout <<"**********END INFO**********"<<std::endl;
 		tmpv.erase(tmpv.begin(),tmpv.end());
         ++hashTable_lines;
     }
@@ -37,12 +41,16 @@ void search_neighbors(HashTable **hashTables,std::vector<int> &r,std::vector<std
 	std::vector<int> tmpg; 
 	std::vector<std::vector<int>> g;
     
+	cout <<"BOOL is "<<Cosine<<std::endl;
+
 	for (std::vector<std::vector<int>>::iterator it=queryset.begin();it!=queryset.end();it++)
     {
+    	// std::vector<int> neighbor; 
     	query = *it;
 		// create L*fi hashFunctions and L*g Functions for every query
 		for (int i=0;i<L;i++)
 		{
+			// std::vector<int> tmpg; 
 			find_hashFunction(tmpg, query, r, k, w, num_of_buckets, tmpfi,Cosine);
 			g.push_back(tmpg);
 			fi.push_back(tmpfi);
@@ -140,6 +148,7 @@ int find_hashFunction(std::vector<int> &g, std::vector<int> &query, std::vector<
 	int M = (int)(pow(2, 32)) - 5;
 	for (int i=0;i<k;i++)
 	{
+		// std::vector<double> v;
 		//rerun generator in case of overflow
 		while (1)
 		{	
@@ -148,7 +157,7 @@ int find_hashFunction(std::vector<int> &g, std::vector<int> &query, std::vector<
 
 			// double in_product = std::inner_product(row->begin(), row->end(), v.begin(), 0);
 			double in_product = std::inner_product(v.begin(), v.end(), query.begin(), 0);
-			
+			cout <<"FIND_HASHF Cosine is "<<Cosine<<std::endl;
 			if (!Cosine)
 			{
 				//random pick of t in [0,w) , double

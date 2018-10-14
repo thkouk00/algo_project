@@ -22,12 +22,14 @@ void Buckets::printList()
 	// cout <<std::endl;
 }
 
-void Buckets::bucket_size()
+int Buckets::bucket_size()
 {
-	cout <<this->List.size()<<std::endl;
+	return this->List.size();
+	// cout <<this->List.size()<<std::endl;
 }
 
 std::list<Node> Buckets::access_list()
 {
-	return this->List;
+	if (this->bucket_size() > 0)
+		return this->List;
 }

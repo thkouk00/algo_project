@@ -21,7 +21,8 @@ void Range_search(std::vector<int> &neighbor, HashTable **hashTables, std::vecto
 		tmpfi = fi[i];
 		cout <<"TMPFI "<<tmpfi<<std::endl;
 		tmpg = g[i];
-		if (!hashTables[i]->bucket_exist(tmpfi))
+		if (!(hashTables[i]->bucket_exist(tmpfi)))
+		// if (!hashTables[i]->bucket_exist(tmpfi))
 		{
 			cout <<"*****MPIKA*****"<<std::endl;
 			continue;
