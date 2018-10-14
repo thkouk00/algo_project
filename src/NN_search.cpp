@@ -3,7 +3,7 @@
 using namespace std;
 
 
-void NN_search(std::vector<int> &neighbor, HashTable **hashTables, std::vector<std::vector<int>> &g, std::vector<int> &query, std::vector<int> &fi, int &L, int &k, long double &dist, bool flag)
+void NN_search(std::vector<int> &neighbor, HashTable **hashTables, std::vector<std::vector<int>> &g, std::vector<int> &query, std::vector<int> &fi, int &L, int &k, long double &dist, bool NNflag, bool Cosine)
 {
 	int counter = 0;
 	int tmpfi;
@@ -37,26 +37,33 @@ void NN_search(std::vector<int> &neighbor, HashTable **hashTables, std::vector<s
 			// 	continue;
 			
 			//ApproxNN_search
-			if (!flag)
+			if (!NNflag)
 			{
 				counter++;
 				if (counter == 3*L)
 				{
 					cout <<"Trick used"<<std::endl;
 					//trick , finish and right result to output
-					neighbor = b;
-					dist = db;
-					exit(1);
+					// neighbor = b;
+					// dist = db;
+					break;
+					// exit(1);
 				}
 			}
 			
-			if ((distance = Euclidean_Distance(query,p,k)) < db)
+			if (!Cosine)
+				distance = Euclidean_Distance(query,p,k);
+			else
+				distance = 1 - Cosine_Similarity(query,p);
+
+			if (distance < db)
 			{
 				b = p;
 				db = distance;
 			}
+			
 		}
-		if (!flag)
+		if (!NNflag)
 			break;
 	}
 	neighbor = b;

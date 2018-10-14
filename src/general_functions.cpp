@@ -27,7 +27,7 @@ void storeDataset(std::vector<std::vector<int>>& dataset,char *input_file,int &h
     }
 }
 
-void search_neighbors(HashTable **hashTables,std::vector<int> &r,char *query_file,int &L,int &k,int &w, int &num_of_buckets)
+void search_neighbors(HashTable **hashTables,std::vector<int> &r,std::vector<std::vector<int>> &queryset,int &L,int &k,int &w, int &num_of_buckets, bool Cosine)
 {
 	int tmpfi;
 	long double dist = 0;
@@ -36,26 +36,14 @@ void search_neighbors(HashTable **hashTables,std::vector<int> &r,char *query_fil
 	std::vector<int> query;
 	std::vector<int> tmpg; 
 	std::vector<std::vector<int>> g;
-	std::string line;
-    std::ifstream myfile(query_file);
-    while (std::getline(myfile, line))
+    
+	for (std::vector<std::vector<int>>::iterator it=queryset.begin();it!=queryset.end();it++)
     {
-	    std::string stringvalues = line;
-		std::istringstream iss (stringvalues);
-
-		int val;
-		iss >> val;
-	
-		while (!iss.eof())
-		{
-			query.push_back(val);
-			iss >> val;
-		}
-
+    	query = *it;
 		// create L*fi hashFunctions and L*g Functions for every query
 		for (int i=0;i<L;i++)
 		{
-			find_hashFunction(tmpg, query, r, k, w, num_of_buckets, tmpfi);
+			find_hashFunction(tmpg, query, r, k, w, num_of_buckets, tmpfi,Cosine);
 			g.push_back(tmpg);
 			fi.push_back(tmpfi);
 			tmpg.erase(tmpg.begin(),tmpg.end());
@@ -63,9 +51,12 @@ void search_neighbors(HashTable **hashTables,std::vector<int> &r,char *query_fil
 
 		// Range_search(hashTables);
 		// ApproxNN_search(neighbor,hashTables,g,query,fi,L,k,dist);
-		NN_search(neighbor,hashTables,g,query,fi,L,k,dist,1);
+		NN_search(neighbor,hashTables,g,query,fi,L,k,dist,1,Cosine);
 
-		cout <<std::endl<<"-------------------------------Start NN_Search----------------------------------------"<<std::endl;
+		if (!Cosine)
+			cout <<std::endl<<"-------------------------------Start NN_Search----------------------------------------"<<std::endl;
+		else
+			cout <<std::endl<<"-------------------------------Start Cosine NN_Search----------------------------------------"<<std::endl;
 		cout <<"Dist is "<<dist<< endl;
 		cout <<"NEIGHBOR:"<<std::endl;
 		for (std::vector<int>::iterator it = neighbor.begin(); it!= neighbor.end(); it++)
@@ -74,14 +65,20 @@ void search_neighbors(HashTable **hashTables,std::vector<int> &r,char *query_fil
 		cout <<"QUERY:"<<std::endl;
 		for (std::vector<int>::iterator it = query.begin(); it!= query.end(); it++)
 			cout <<*it<<" ";
-		cout <<std::endl<<"--------------------------------End NN_Search----------------------------------------"<<std::endl;
+		if (!Cosine)
+			cout <<std::endl<<"--------------------------------End NN_Search----------------------------------------"<<std::endl;
+		else
+			cout <<std::endl<<"--------------------------------End Cosine NN_Search----------------------------------------"<<std::endl;
 
 		neighbor.erase(neighbor.begin(),neighbor.end());
 		
 
 
-		NN_search(neighbor,hashTables,g,query,fi,L,k,dist,0);
-		cout <<std::endl<<"-------------------------------Start ApproxNN_Search----------------------------------------"<<std::endl;
+		NN_search(neighbor,hashTables,g,query,fi,L,k,dist,0,Cosine);
+		if (!Cosine)
+			cout <<std::endl<<"-------------------------------Start ApproxNN_Search----------------------------------------"<<std::endl;
+		else
+			cout <<std::endl<<"-------------------------------Start Cosine ApproxNN_Search----------------------------------------"<<std::endl;
 		cout <<"Dist is "<<dist<< endl;
 		cout <<"NEIGHBOR:"<<std::endl;
 		for (std::vector<int>::iterator it = neighbor.begin(); it!= neighbor.end(); it++)
@@ -90,13 +87,26 @@ void search_neighbors(HashTable **hashTables,std::vector<int> &r,char *query_fil
 		cout <<"QUERY:"<<std::endl;
 		for (std::vector<int>::iterator it = query.begin(); it!= query.end(); it++)
 			cout <<*it<<" ";
-		cout <<std::endl<<"--------------------------------End ApproxNN_Search----------------------------------------"<<std::endl;
+		if (!Cosine)
+			cout <<std::endl<<"--------------------------------End ApproxNN_Search----------------------------------------"<<std::endl;
+		else
+			cout <<std::endl<<"--------------------------------End Cosine ApproxNN_Search----------------------------------------"<<std::endl;
 
 		neighbor.erase(neighbor.begin(),neighbor.end());
 
-		int R = 52;
-		int c = 4; 
-		Range_search(neighbor,hashTables,g,query,fi,L,k,R,c);
+		double R;
+		int c;
+		if (!Cosine)
+		{
+			R = 52;
+			c = 4;	
+		}
+		else
+		{
+			R = 0.5;
+			c = 1;
+		}	 
+		Range_search(neighbor,hashTables,g,query,fi,L,k,R,c,Cosine);
 		// cout <<std::endl<<"-------------------------------Start Range_Search----------------------------------------"<<std::endl;
 		// cout <<"Dist is "<<dist<< endl;
 		// cout <<"NEIGHBOR:"<<std::endl;
@@ -108,14 +118,16 @@ void search_neighbors(HashTable **hashTables,std::vector<int> &r,char *query_fil
 		// 	cout <<*it<<" ";
 		// cout <<std::endl<<"--------------------------------End Range_Search----------------------------------------"<<std::endl;
 
+		
 		neighbor.erase(neighbor.begin(),neighbor.end());
-
 		query.erase(query.begin(),query.end());
+		g.erase(g.begin(),g.end());
+		fi.erase(fi.begin(),fi.end());
 	}
 
 }
 
-int find_hashFunction(std::vector<int> &g, std::vector<int> &query, std::vector<int> &r, int &k, int &w, int &num_of_buckets, int &fi)
+int find_hashFunction(std::vector<int> &g, std::vector<int> &query, std::vector<int> &r, int &k, int &w, int &num_of_buckets, int &fi, bool Cosine)
 {
 	int counter=0;
 	// int fi;
@@ -134,31 +146,48 @@ int find_hashFunction(std::vector<int> &g, std::vector<int> &query, std::vector<
 			//vector v same size as current vector size for use in inner_product
 			normal_distr_generator(v,query.size());
 
-			//random pick of t in [0,w) , double
-			t = ((double)rand() / RAND_MAX) * w ;
 			// double in_product = std::inner_product(row->begin(), row->end(), v.begin(), 0);
 			double in_product = std::inner_product(v.begin(), v.end(), query.begin(), 0);
-			//compute h(p)
-			h = ((in_product+t)/w);
-			// cout <<"h= "<<h<<std::endl;
-			//no overflow
-			if (!check_overflow(h))
-			{	
-				//empty vector to take new values
-				v.erase(v.begin(),v.end());
-				cout <<"**OVERFLOW***"<<std::endl;
+			
+			if (!Cosine)
+			{
+				//random pick of t in [0,w) , double
+				t = ((double)rand() / RAND_MAX) * w ;
+				//compute h(p)
+				h = ((in_product+t)/w);
+				// cout <<"h= "<<h<<std::endl;
+				//no overflow
+				if (!check_overflow(h))
+				{	
+					//empty vector to take new values
+					v.erase(v.begin(),v.end());
+					cout <<"**OVERFLOW***"<<std::endl;
+				}
+				else
+					break;
 			}
 			else
+			{
+				if (in_product >= 0)
+					h = 1;
+				else
+					h = 0;
 				break;
+			}
 		}
 		g.push_back(h);
 		//empty vector to take new values
 		v.erase(v.begin(),v.end());
 	}
-	//compute fi , num_of_buckets = tablesize/4
-	fi = (std::inner_product(g.begin(), g.end(), r.begin(), 0)%M)%num_of_buckets;
-	if (fi<0)
-		fi = (((std::inner_product(g.begin(), g.end(), r.begin(), 0) % M + M) % M)%num_of_buckets);
+	if (!Cosine)
+	{
+		//compute fi , num_of_buckets = tablesize/4
+		fi = (std::inner_product(g.begin(), g.end(), r.begin(), 0)%M)%num_of_buckets;
+		if (fi<0)
+			fi = (((std::inner_product(g.begin(), g.end(), r.begin(), 0) % M + M) % M)%num_of_buckets);
+	}
+	else
+		fi = binarytodecimal(g);
 	return fi;
 }
 

@@ -52,61 +52,41 @@ Buckets* HashTable::access_bucket(int &position)
 		return (Buckets*)-1;
 }
 
-void HashTable::hashDataset(std::vector<std::vector<int>>& dataset, std::vector<int> &r, int k, int w)
+// Euclidean Distance
+void HashTable::hashDataset(std::vector<std::vector<int>> &dataset, std::vector<int> &r, int k, int w)
 {
 	//must find position of bucket first
 	int counter=0;
 	int fi;
 	int h;
 	double t;
+	string id;
 	std::vector<double> v;
 	//holds all values from h
 	std::vector<int> g;
-	// std::vector<int> r;
 	int M = (int)(pow(2, 32)) - 5;
 		
 
 	// use current time as seed for random generator
 	std::srand(std::time(nullptr)); 
-	
-	//randomly pick k numbers for r , these values are same for every entry
-	// for (int i=0;i<k;i++)
-	// {
-	// 	int num = rand() % 100000 + (-100000);
-	// 	r.push_back(num);
-	// }
-	
-	// for (std::vector<int>::iterator t=r.begin();t!=r.end();t++)
-	// 	cout <<*t<<' ';
-	// cout <<std::endl;
 
 	for(vector< vector<int> >::iterator row = dataset.begin(); row != dataset.end(); ++row)
 	{
 		// unique id 
 		counter++;
-		// for(vector<int>::iterator col = row->begin(); col != row->end(); ++col)
-		// 	cout << *col<<' ';
-		// cout <<endl;
 		//must do this k times and put results in g
 		for (int i=0;i<k;i++)
-		// for (int i=0;i<1;i++)
 		{	
 			//rerun generator in case of overflow
 			while (1)
 			{	
 				//vector v same size as current vector size for use in inner_product
 				normal_distr_generator(v,row->size());
-				// cout <<"V:"<<std::endl;
-				// for (std::vector<double>::iterator it=v.begin();it!=v.end();it++)
-				// 	cout <<*it<<' ';
-				// cout <<std::endl;
 				//random pick of t in [0,w) , double
 				t = ((double)rand() / RAND_MAX) * w ;
-				// double in_product = std::inner_product(row->begin(), row->end(), v.begin(), 0);
 				double in_product = std::inner_product(v.begin(), v.end(), row->begin(), 0);
 				//compute h(p)
 				h = ((in_product+t)/w);
-				// cout <<"h= "<<h<<std::endl;
 				//no overflow
 				if (!check_overflow(h))
 				{	
@@ -145,30 +125,44 @@ void HashTable::hashDataset(std::vector<std::vector<int>>& dataset, std::vector<
 		// 		fi = (((std::inner_product(g.begin(), g.end(), r.begin(), 0) % M + M) % M)%this->num_of_buckets);
 		// }
 		//insert id and point to hashTable at fi bucket
-		this->insertPoint(fi, std::to_string(counter), *row,g);
+		id = "item_" + std::to_string(counter);
+		this->insertPoint(fi, id, *row,g);
 		g.erase(g.begin(), g.end());
-		// for(vector<int>::iterator col = row->begin(); col != row->end(); ++col)
-		// 	cout << *col<<' ';
-		// cout <<"here"<<std::endl; 
-		// break;
 	}
 }
 
-// long double HashTable::Euclidean_Distance(const std::vector<int> & v1,const std::vector<int> &v2,int &k)
-// {
-//  	long double sum = 0;
-//  	for(unsigned int i = 0;i<v1.size();i++){
-//  		sum += pow((v1[i] - v2[i]),k);
-//  	}
-//  	return pow(sum,1.0/k);
-// };
+// Cosine Similarity
+void HashTable::hashDataset(std::vector<std::vector<int>> &dataset, int k)
+{
+	int h;
+	int counter = 0;
+	std::vector<int> g;
+	std::vector<double> v;
+	string id;
 
-// template <typename T>
-// long double HashTable::Euclidean_Distance(const std::vector<T> & v1,const std::vector<T> &v2,int &k)
-// {
-//  	long double sum = 0;
-//  	for(unsigned int i = 0;i<v1.size();i++){
-//  		sum += pow((v1[i] - v2[i]),k);
-//  	}
-//  	return pow(sum,1.0/k);
-// };
+	for(vector< vector<int> >::iterator row = dataset.begin(); row != dataset.end(); ++row)
+	{
+		counter++;
+		for (int i=0;i<k;i++)
+		{		
+			//vector v same size as current vector size for use in inner_product
+			normal_distr_generator(v,row->size());
+			//random pick of t in [0,w) , double
+			// t = ((double)rand() / RAND_MAX) * w ;
+			double in_product = std::inner_product(v.begin(), v.end(), row->begin(), 0);
+			//compute h(p)
+			if (in_product>=0)
+				h = 1;
+			else
+				h = 0;
+
+			g.push_back(h);
+			//empty vector to take new values
+			v.erase(v.begin(),v.end());
+		}
+		long int position = binarytodecimal(g);
+		id = "item_" + std::to_string(counter);
+		this->insertPoint(position, id, *row,g);
+		g.erase(g.begin(), g.end());
+	}
+}

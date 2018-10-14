@@ -15,7 +15,7 @@
 #include "../include/Range_search.h"
 
 void storeDataset(std::vector<std::vector<int>>& ,char *,int &);
-void search_neighbors(HashTable **, std::vector<int> &, char *, int&, int&, int&, int&);
-int find_hashFunction(std::vector<int>&, std::vector<int>&, std::vector<int> &, int&, int&, int&, int&);
+void search_neighbors(HashTable **, std::vector<int> &, std::vector<std::vector<int>>&, int&, int&, int&, int&, bool);
+int find_hashFunction(std::vector<int>&, std::vector<int>&, std::vector<int> &, int&, int&, int&, int&, bool);
 
 #endif

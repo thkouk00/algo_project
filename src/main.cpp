@@ -7,6 +7,9 @@
 #include "../include/HashTable.h"
 #include "../include/general_functions.h"
 
+#define EUCLIDEAN 0
+#define COSINE 1
+
 using namespace std;
 
 void Usage()
@@ -119,10 +122,9 @@ int main(int argc, char const *argv[])
 
 
 	//construct lsh
-	// std::vector<int> test;
 	int hashTable_lines = 0;
 	std::vector<std::vector<int>> dataset;
-	//store dataset in memory for faster access 
+	//store dataset in memory for faster and multiple times access 
 	storeDataset(dataset, input_file, hashTable_lines);
 	std::cout <<endl<< "Number of lines in input file: " << hashTable_lines<<std::endl;;
 
@@ -154,20 +156,13 @@ int main(int argc, char const *argv[])
 	}
 
     //create L hash_tables
-    HashTable **hashTables;	
-    hashTables = new HashTable*[L];
-    for (int i=0;i<L;i++)
-    // for (int i=0;i<1;i++)
-    {
-    	hashTables[i] = new HashTable(number_of_buckets);
-    	hashTables[i]->hashDataset(dataset,r,k,w);
-    }
-    
-    // cout <<"H2:"<<std::endl;
-    // for (int i =0;i<number_of_buckets;i++)
-    // 	hashTables[1]->printBucket(i);
-    // cout <<"H4:"<<std::endl;
-    // hashTables[3]->printBucket(523);
+	HashTable **hashTables;	
+	hashTables = new HashTable*[L];
+	for (int i=0;i<L;i++)
+	{
+		hashTables[i] = new HashTable(number_of_buckets);
+		hashTables[i]->hashDataset(dataset,r,k,w);
+	}
 	
 	// ask user for query file and output file
 	if (!query_file)
@@ -187,9 +182,25 @@ int main(int argc, char const *argv[])
 		cout <<str<<endl<<output_file<<endl;
 	}
 
-	//search neighbors from query_file
-	// search_neighbors(hashTables,r,query_file,L,k,w,number_of_buckets);
-	search_neighbors(hashTables,r,query_file,L,k,w,number_of_buckets);
+	int queryset_lines = 0;
+	std::vector<std::vector<int>> queryset;
+	//store queryset in memory for faster and multiple times access 
+	storeDataset(queryset, query_file, queryset_lines);
+	//search neighbors from query_file ***Euclidean Distance***
+	search_neighbors(hashTables,r,queryset,L,k,w,number_of_buckets,EUCLIDEAN);
+	
+	// prepare hashtable for cosine similarity
+	for (int i=0;i<L;i++)
+	{
+		delete hashTables[i];
+		hashTables[i] = new HashTable(pow(2,k));
+		hashTables[i]->hashDataset(dataset,k);
+	}
+
+	//search neighbors from query_file ***Cosine Similarity***
+	search_neighbors(hashTables,r,queryset,L,k,w,number_of_buckets, COSINE);
+
+
 	//ask user to rerun program or not 
 
 	//free memory

@@ -3,7 +3,7 @@
 using namespace std;
 
 
-void Range_search(std::vector<int> &neighbor, HashTable **hashTables, std::vector<std::vector<int>> &g, std::vector<int> &query, std::vector<int> &fi, int &L, int &k, int &r, int &c)
+void Range_search(std::vector<int> &neighbor, HashTable **hashTables, std::vector<std::vector<int>> &g, std::vector<int> &query, std::vector<int> &fi, int &L, int &k, double &r, int &c, bool Cosine)
 {
 	int tmpfi;
 	long double distance;
@@ -12,7 +12,10 @@ void Range_search(std::vector<int> &neighbor, HashTable **hashTables, std::vecto
 	
 	cout <<"***CxR = "<<c*r<<"***"<<std::endl;
 
-	cout <<std::endl<<"-------------------------------Start Range_Search----------------------------------------"<<std::endl;
+	if (!Cosine)
+		cout <<std::endl<<"-------------------------------Start Range_Search----------------------------------------"<<std::endl;
+	else
+		cout <<std::endl<<"-------------------------------Start Cosine Range_Search----------------------------------------"<<std::endl;
 	for (int i=0;i<L;i++)
 	{
 		tmpfi = fi[i];
@@ -32,7 +35,11 @@ void Range_search(std::vector<int> &neighbor, HashTable **hashTables, std::vecto
 		for (std::list<Node>::iterator it = List.begin(); it!=List.end(); it++)
 		{
 			p = it->get_p();
-			if ((distance = Euclidean_Distance(query,p,k)) < c*r)
+			if (!Cosine)
+				distance = Euclidean_Distance(query,p,k);
+			else
+				distance = Cosine_Similarity(query,p);
+			if (distance < c*r)
 			{
 				cout <<"Dist is "<<distance<< endl;
 				cout <<"NEIGHBOR:"<<std::endl;
@@ -48,5 +55,8 @@ void Range_search(std::vector<int> &neighbor, HashTable **hashTables, std::vecto
 		}
 		cout <<"End HashTable "<<i<<std::endl;
 	}
-	cout <<std::endl<<"--------------------------------End Range_Search----------------------------------------"<<std::endl;
+	if (!Cosine)
+		cout <<std::endl<<"--------------------------------End Range_Search----------------------------------------"<<std::endl;
+	else
+		cout <<std::endl<<"--------------------------------End Cosine Range_Search----------------------------------------"<<std::endl;
 }

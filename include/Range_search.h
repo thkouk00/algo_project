@@ -9,9 +9,9 @@
 #include <stdlib.h>
 #include "../include/HashTable.h"
 #include "../include/Buckets.h"
-#include "../include/Euclidean_distance.h"
+#include "../include/Distance.h"
 
-void Range_search(std::vector<int>&, HashTable **, std::vector<std::vector<int>>&, std::vector<int>&, std::vector<int>&, int &, int &, int&, int&);
+void Range_search(std::vector<int>&, HashTable **, std::vector<std::vector<int>>&, std::vector<int>&, std::vector<int>&, int &, int &, double&, int&, bool);
 
 
 

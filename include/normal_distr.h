@@ -10,6 +10,7 @@
 #include <ctime>
 #include <bits/stdc++.h>
 
+int binarytodecimal(std::vector<int>&);
 int check_overflow(int);
 void normal_distr_generator(std::vector<double> &,int);
 
