@@ -22,17 +22,19 @@ void storeDataset(std::vector<std::vector<int>> &dataset,char *input_file,int &h
 			iss >> val;
 		}
 		dataset.push_back(tmpv);
-		cout <<"**********START INFO**********"<<std::endl;
-		cout <<"Size dataset: "<<dataset.size()<<std::endl;
-		cout <<"Size tmpv: "<<tmpv.size()<<" and line "<<hashTable_lines+1<<std::endl; 
-		cout <<"**********END INFO**********"<<std::endl;
+		// cout <<"**********START INFO**********"<<std::endl;
+		// cout <<"Size dataset: "<<dataset.size()<<std::endl;
+		// cout <<"Size tmpv: "<<tmpv.size()<<" and line "<<hashTable_lines+1<<std::endl; 
+		// cout <<"**********END INFO**********"<<std::endl;
 		tmpv.erase(tmpv.begin(),tmpv.end());
         ++hashTable_lines;
     }
 }
 
-void search_neighbors(HashTable **hashTables,std::vector<int> &r,std::vector<std::vector<int>> &queryset,int &L,int &k,int &w, int &num_of_buckets, bool Cosine)
+void search_neighbors(HashTable **hashTables,std::vector<int> &r,std::vector<std::vector<int>> &queryset,int &L,int &k,int &w, int &num_of_buckets, bool Cosine,std::ofstream &output)
 {
+	int counter=0;
+	string str = "item_";
 	int tmpfi;
 	long double dist = 0;
 	std::vector<int> neighbor; 
@@ -40,11 +42,16 @@ void search_neighbors(HashTable **hashTables,std::vector<int> &r,std::vector<std
 	std::vector<int> query;
 	std::vector<int> tmpg; 
 	std::vector<std::vector<int>> g;
-    
+	string id;
+	string id_query;
+    // std::ofstream myfile;
+    // myfile.open (output, ios::out | ios::app);
+
 	cout <<"BOOL is "<<Cosine<<std::endl;
 
 	for (std::vector<std::vector<int>>::iterator it=queryset.begin();it!=queryset.end();it++)
     {
+    	counter++;
     	// std::vector<int> neighbor; 
     	query = *it;
 		// create L*fi hashFunctions and L*g Functions for every query
@@ -59,46 +66,84 @@ void search_neighbors(HashTable **hashTables,std::vector<int> &r,std::vector<std
 
 		// Range_search(hashTables);
 		// ApproxNN_search(neighbor,hashTables,g,query,fi,L,k,dist);
-		NN_search(neighbor,hashTables,g,query,fi,L,k,dist,1,Cosine);
+		NN_search(neighbor,hashTables,g,query,fi,L,k,dist,id,1,Cosine);
+		
+		id_query = str+ std::to_string(counter);
+		output <<"Query: "<<id_query<<std::endl;
+		output <<"True Nearest neighbor: "<<id<<std::endl;
+		output <<"distanceTrue: "<<dist<<std::endl;
+	
 
 		if (!Cosine)
+		{
+			// output <<std::endl<<"-------------------------------Start NN_Search----------------------------------------"<<std::endl;
 			cout <<std::endl<<"-------------------------------Start NN_Search----------------------------------------"<<std::endl;
+		}
 		else
+		{
+			// output <<std::endl<<"-------------------------------Start Cosine NN_Search----------------------------------------"<<std::endl;
 			cout <<std::endl<<"-------------------------------Start Cosine NN_Search----------------------------------------"<<std::endl;
+		}
+		// output <<"Dist is "<<dist<< endl;
+		// output <<"NEIGHBOR:"<<id<<std::endl;
 		cout <<"Dist is "<<dist<< endl;
 		cout <<"NEIGHBOR:"<<std::endl;
-		for (std::vector<int>::iterator it = neighbor.begin(); it!= neighbor.end(); it++)
-			cout <<*it<<" ";
+		for (std::vector<int>::iterator iter = neighbor.begin(); iter!= neighbor.end(); iter++)
+			cout <<*iter<<" ";
 		cout <<std::endl;
 		cout <<"QUERY:"<<std::endl;
-		for (std::vector<int>::iterator it = query.begin(); it!= query.end(); it++)
-			cout <<*it<<" ";
+		for (std::vector<int>::iterator iter = query.begin(); iter!= query.end(); iter++)
+			cout <<*iter<<" ";
 		if (!Cosine)
+		{
+			// output <<std::endl<<"--------------------------------End NN_Search----------------------------------------"<<std::endl;
 			cout <<std::endl<<"--------------------------------End NN_Search----------------------------------------"<<std::endl;
+		}
 		else
+		{
+			// output <<std::endl<<"--------------------------------End Cosine NN_Search----------------------------------------"<<std::endl; 
 			cout <<std::endl<<"--------------------------------End Cosine NN_Search----------------------------------------"<<std::endl;
+		}
 
 		neighbor.erase(neighbor.begin(),neighbor.end());
 		
 
 
-		NN_search(neighbor,hashTables,g,query,fi,L,k,dist,0,Cosine);
+		NN_search(neighbor,hashTables,g,query,fi,L,k,dist,id,0,Cosine);
+		output <<"Approximate Nearest neighbor: "<<id<<std::endl;
+		output <<"distanceLSH: "<<dist<<std::endl;
+
+
 		if (!Cosine)
+		{
+			// output <<std::endl<<"-------------------------------Start ApproxNN_Search----------------------------------------"<<std::endl;
 			cout <<std::endl<<"-------------------------------Start ApproxNN_Search----------------------------------------"<<std::endl;
+		}
 		else
+		{
+			// output <<std::endl<<"-------------------------------Start Cosine ApproxNN_Search----------------------------------------"<<std::endl;
 			cout <<std::endl<<"-------------------------------Start Cosine ApproxNN_Search----------------------------------------"<<std::endl;
+		}
+		// output <<"Dist is "<<dist<< endl;
+		// output <<"NEIGHBOR:"<<std::endl;
 		cout <<"Dist is "<<dist<< endl;
 		cout <<"NEIGHBOR:"<<std::endl;
-		for (std::vector<int>::iterator it = neighbor.begin(); it!= neighbor.end(); it++)
-			cout <<*it<<" ";
+		for (std::vector<int>::iterator iter = neighbor.begin(); iter!= neighbor.end(); iter++)
+			cout <<*iter<<" ";
 		cout <<std::endl;
 		cout <<"QUERY:"<<std::endl;
-		for (std::vector<int>::iterator it = query.begin(); it!= query.end(); it++)
-			cout <<*it<<" ";
+		for (std::vector<int>::iterator iter = query.begin(); iter!= query.end(); iter++)
+			cout <<*iter<<" ";
 		if (!Cosine)
+		{
+			// output <<std::endl<<"--------------------------------End ApproxNN_Search----------------------------------------"<<std::endl;
 			cout <<std::endl<<"--------------------------------End ApproxNN_Search----------------------------------------"<<std::endl;
+		}
 		else
+		{
+			// output <<std::endl<<"--------------------------------End Cosine ApproxNN_Search----------------------------------------"<<std::endl;
 			cout <<std::endl<<"--------------------------------End Cosine ApproxNN_Search----------------------------------------"<<std::endl;
+		}
 
 		neighbor.erase(neighbor.begin(),neighbor.end());
 
@@ -157,7 +202,7 @@ int find_hashFunction(std::vector<int> &g, std::vector<int> &query, std::vector<
 
 			// double in_product = std::inner_product(row->begin(), row->end(), v.begin(), 0);
 			double in_product = std::inner_product(v.begin(), v.end(), query.begin(), 0);
-			cout <<"FIND_HASHF Cosine is "<<Cosine<<std::endl;
+			// cout <<"FIND_HASHF Cosine is "<<Cosine<<std::endl;
 			if (!Cosine)
 			{
 				//random pick of t in [0,w) , double

@@ -107,8 +107,8 @@ void HashTable::hashDataset(std::vector<std::vector<int>> &dataset, std::vector<
 				normal_distr_generator(v,row->size());
 				//random pick of t in [0,w) , double
 				t = ((double)rand() / RAND_MAX) * w ;
-				if (v.size() == 0)
-					cout <<"***************SIZE OF V == 0******************"<<std::endl;
+				// if (v.size() == 0)
+				// 	cout <<"***************SIZE OF V == 0******************"<<std::endl;
 				double in_product = std::inner_product(v.begin(), v.end(), row->begin(), 0);
 				//compute h(p)
 				h = ((in_product+t)/w);
@@ -132,9 +132,9 @@ void HashTable::hashDataset(std::vector<std::vector<int>> &dataset, std::vector<
 		// make fi positive if not
 		if (fi<0)
 		{
-			cout <<"Negative fi "<<fi<<std::endl;
+			// cout <<"Negative fi "<<fi<<std::endl;
 			fi = (((std::inner_product(g.begin(), g.end(), r.begin(), 0) % M + M) % M)%(this->num_of_buckets));
-			cout <<"Fixed fi "<<fi<<std::endl;
+			// cout <<"Fixed fi "<<fi<<std::endl;
 		}
 		// cout <<"FI= "<<fi<<std::endl;
 		// check for overflow

@@ -3,7 +3,7 @@
 using namespace std;
 
 
-void NN_search(std::vector<int> &neighbor, HashTable **hashTables, std::vector<std::vector<int>> &g, std::vector<int> &query, std::vector<int> &fi, int &L, int &k, long double &dist, bool NNflag, bool Cosine)
+void NN_search(std::vector<int> &neighbor, HashTable **hashTables, std::vector<std::vector<int>> &g, std::vector<int> &query, std::vector<int> &fi, int &L, int &k, long double &dist, string &id,bool NNflag, bool Cosine)
 {
 	int counter = 0;
 	int tmpfi;
@@ -63,6 +63,7 @@ void NN_search(std::vector<int> &neighbor, HashTable **hashTables, std::vector<s
 			{
 				b = p;
 				db = distance;
+				id = it->get_id();
 			}
 			
 		}

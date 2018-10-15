@@ -23,3 +23,8 @@ std::vector<int> Node::get_g()
 {
 	return this->g;
 }
+
+std::string Node::get_id()
+{
+	return this->id;
+}

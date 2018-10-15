@@ -18,6 +18,7 @@ public:
 	void printPoints();
 	std::vector<int>& get_p();
 	std::vector<int> get_g();
+	std::string get_id();
 	
 };
 
