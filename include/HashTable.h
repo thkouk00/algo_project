@@ -25,14 +25,14 @@ public:
 	HashTable(int);
 	~HashTable();
 	void setVals(int);
-	void insertPoint(int, std::string,std::vector<int>&, std::vector<int>&);
+	void insertPoint(int, std::string,std::vector<int>&, std::vector<int>);
 	void printBucket(int);
 	bool bucket_exist(int);
 	void printAll();
 	Buckets* access_bucket(int&);
-	void hashDataset(std::vector<std::vector<int>>&, std::vector<int>&, int, int);
+	void hashDataset(std::vector<std::vector<int>>&, std::vector<int>&, std::vector<std::string> &,int, int);
 	//overloading function
-	void hashDataset(std::vector<std::vector<int>>&, int);
+	void hashDataset(std::vector<std::vector<int>>&, std::vector<std::string> &,int);
 
 };
 

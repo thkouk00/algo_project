@@ -27,7 +27,7 @@ int check_overflow(int num)
 { 
     // Checking if addition will cause overflow 
     if (num >= INT_MAX) 
-      return -1; 
+      return 0; 
     // No overflow occured 
     else
       return 1; 

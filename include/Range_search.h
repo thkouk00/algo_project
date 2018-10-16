@@ -11,7 +11,7 @@
 #include "../include/Buckets.h"
 #include "../include/Distance.h"
 
-void Range_search(std::vector<int>&, HashTable **, std::vector<std::vector<int>>&, std::vector<int>&, std::vector<int>&, int &, int &, double&, int&, bool);
+void Range_search(HashTable **, std::vector<std::vector<int>>&, std::vector<int>&, std::vector<int>&, int &, int &, double&, int&, bool, std::ofstream&);
 
 
 

@@ -123,9 +123,12 @@ int main(int argc, char const *argv[])
 
 	//construct lsh
 	int hashTable_lines = 0;
+	std::vector<std::string> id;
 	std::vector<std::vector<int>> dataset;
+	bool euclidean_flag = 1;
+	double Radius=0;
 	//store dataset in memory for faster and multiple times access 
-	storeDataset(dataset, input_file, hashTable_lines);
+	storeDataset(dataset, id,input_file, hashTable_lines,euclidean_flag,Radius);
 	std::cout <<endl<< "Number of lines in input file: " << hashTable_lines<<std::endl;;
 
 	cout <<"Ready to print"<<endl;
@@ -151,21 +154,21 @@ int main(int argc, char const *argv[])
 	//randomly pick k numbers for r , these values are same for every entry
 	for (int i=0;i<k;i++)
 	{
-		int num = rand() % 100000 + (-100000);
+		int num = rand() % 10 + (-10);
 		r.push_back(num);
 	}
 
-	cout <<"HastTable creation"<<std::endl;
-    //create L hash_tables
+	// cout <<"HastTable creation"<<std::endl;
+ //    //create L hash_tables
 	HashTable **hashTables;	
 	hashTables = new HashTable*[L];
 	for (int i=0;i<L;i++)
 	{
 		hashTables[i] = new HashTable(number_of_buckets);
-		hashTables[i]->hashDataset(dataset,r,k,w);
+		hashTables[i]->hashDataset(dataset,r,id,k,w);
 	}
 	
-	// ask user for query file and output file
+	// // ask user for query file and output file
 	if (!query_file)
 	{
 		cout <<"Give query file: ";
@@ -185,13 +188,17 @@ int main(int argc, char const *argv[])
 
 	int queryset_lines = 0;
 	std::vector<std::vector<int>> queryset;
-	//store queryset in memory for faster and multiple times access 
-	storeDataset(queryset, query_file, queryset_lines);
-
+	
+	id.erase(id.begin(),id.end());
+	// //store queryset in memory for faster and multiple times access 
+	storeDataset(queryset, id,query_file, queryset_lines,euclidean_flag,Radius);
+	cout <<"END QUERYSET STORE"<<std::endl;
 	std::ofstream outputfile;
 	outputfile.open (output_file, ios::out | ios::trunc);
+	
+	// outputfile <<"Euclidean Distance Results:"<<std::endl;
 	// search neighbors from query_file ***Euclidean Distance***
-	search_neighbors(hashTables, r, queryset, L, k, w, number_of_buckets, EUCLIDEAN, outputfile);
+	search_neighbors(hashTables, id, r, queryset, L, k, w, number_of_buckets, EUCLIDEAN, outputfile);
 	
 	// cout <<"QuerySet:"<<std::endl;
 	// for (std::vector<std::vector<int>>::iterator it=queryset.begin();it!=queryset.end();it++)
@@ -202,33 +209,38 @@ int main(int argc, char const *argv[])
 
 	// }
 	
-	number_of_buckets = pow(2,k);
+	//prepare id vector for new elements
+	// id.erase(id.begin(),id.end());
+	// number_of_buckets = pow(2,k);
 	// prepare hashtable for cosine similarity
-	for (int i=0;i<L;i++)
-	{
-		delete hashTables[i];
-		hashTables[i] = new HashTable(number_of_buckets);
-		hashTables[i]->hashDataset(dataset,k);
-	}
-	// delete[] hashTables;
-
-	// HashTable **hTable;
-	// hTable = new HashTable*[L];
 	// for (int i=0;i<L;i++)
 	// {
-	// 	hTable[i] = new HashTable(number_of_buckets);
-	// 	hTable[i]->hashDataset(dataset,k);
+	// 	delete hashTables[i];
+	// 	hashTables[i] = new HashTable(number_of_buckets);
+	// 	//prepare id vector to take new ids
+	// 	hashTables[i]->hashDataset(dataset,id,k);
+	// 	// hashTables[i]->printAll();
 	// }
+	// // delete[] hashTables;
+
+	// // HashTable **hTable;
+	// // hTable = new HashTable*[L];
+	// // for (int i=0;i<L;i++)
+	// // {
+	// // 	hTable[i] = new HashTable(number_of_buckets);
+	// // 	hTable[i]->hashDataset(dataset,k);
+	// // }
 		
 
-	// //search neighbors from query_file ***Cosine Similarity***
-	search_neighbors(hashTables,r,queryset,L,k,w,number_of_buckets, COSINE, outputfile);
+	// outputfile <<"Cosine Similarity Results:"<<std::endl;
+	// // //search neighbors from query_file ***Cosine Similarity***
+	// search_neighbors(hashTables,r,queryset,L,k,w,number_of_buckets, COSINE, outputfile);
 
 
 	//ask user to rerun program or not 
 
-	outputfile.close();
-	//free memory
+	// outputfile.close();
+	// // //free memory
 	for (int i=0;i<L;i++)
 		delete hashTables[i];
 	delete[] hashTables;

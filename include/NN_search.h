@@ -11,6 +11,7 @@
 #include "../include/Buckets.h"
 #include "../include/Distance.h"
 
-void NN_search(std::vector<int>&, HashTable **, std::vector<std::vector<int>>&, std::vector<int>&, std::vector<int>&, int&, int&, long double&, std::string&,bool, bool);
+void NN_search(HashTable **hashTables, std::vector<std::vector<int>> &g, std::vector<int> &query, std::vector<int> &fi, int &L, int &k, double &r, int &c, bool Cosine, std::ofstream &output);
+// void NN_search(std::vector<int>&, HashTable **, std::vector<std::vector<int>>&, std::vector<int>&, std::vector<int>&, int&, int&, long double&, std::string&, bool, std::ofstream&);
 
 #endif

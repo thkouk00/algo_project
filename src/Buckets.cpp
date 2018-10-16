@@ -2,13 +2,13 @@
 
 using namespace std;
 
-Buckets::Buckets(string str,vector<int> &v,vector<int> &g)
+Buckets::Buckets(string str,vector<int> &v,vector<int> g)
 {
 	Node node(str,v,g);
 	this->List.push_back(node);
 }
 
-void Buckets::insertPointAtList(string str,vector<int> &v,vector<int> &g)
+void Buckets::insertPointAtList(string str,vector<int> &v,vector<int> g)
 {
 	Node node(str,v,g);
 	this->List.push_back(node);
@@ -30,6 +30,6 @@ int Buckets::bucket_size()
 
 std::list<Node> Buckets::access_list()
 {
-	if (this->bucket_size() > 0)
+	// if (this->bucket_size() > 0)
 		return this->List;
 }

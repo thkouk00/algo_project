@@ -27,8 +27,12 @@ void HashTable::setVals(int num)
 		this->buckets[i] = NULL;
 }
 
-void HashTable::insertPoint(int bucket_num,string id,vector<int> &v,std::vector<int> &g)
+void HashTable::insertPoint(int bucket_num,string id,vector<int> &v,std::vector<int> g)
 {
+	cout <<"INSERTPOINT ";
+	for (std::vector<int>::iterator it=g.begin();it!=g.end();it++)
+		cout <<*it<<' ';
+	cout <<std::endl;
 	if (!this->buckets[bucket_num])
 		this->buckets[bucket_num] = new Buckets(id,v,g);
 	else
@@ -45,10 +49,14 @@ void HashTable::printBucket(int bucket_num)
 
 void HashTable::printAll()
 {
+	int counter=0;		
 	for (int i=0;i<this->num_of_buckets;i++)
 	{
 		if (this->buckets[i])
+		{
+			counter += this->buckets[i]->bucket_size();
 			cout <<"Bucket "<<i<<" is Active"<<std::endl;
+		}
 		else
 		{
 			cout <<"Bucket "<<i<<" *NOT* Active"<<std::endl;
@@ -56,6 +64,7 @@ void HashTable::printAll()
 			cout <<"**FLAG IS "<<flag<<std::endl;
 		}
 	}
+	cout <<"Total size is "<<counter<<std::endl;
 }
 
 bool HashTable::bucket_exist(int position)
@@ -75,15 +84,15 @@ Buckets* HashTable::access_bucket(int &position)
 }
 
 // Euclidean Distance
-void HashTable::hashDataset(std::vector<std::vector<int>> &dataset, std::vector<int> &r, int k, int w)
+void HashTable::hashDataset(std::vector<std::vector<int>> &dataset, std::vector<int> &r, std::vector<std::string> &id,int k, int w)
 {
 	//must find position of bucket first
 	int counter=0;
 	int fi;
 	int h;
 	double t;
-	string id;
-	string tmpstr = "item_";
+	// string id;
+	// string tmpstr = "item_";
 	std::vector<double> v;
 	//holds all values from h
 	std::vector<int> g;
@@ -92,7 +101,9 @@ void HashTable::hashDataset(std::vector<std::vector<int>> &dataset, std::vector<
 	// use current time as seed for random generator
 	std::srand(std::time(nullptr)); 
 
-	for(vector< vector<int> >::iterator row = dataset.begin(); row != dataset.end(); ++row)
+	vector<string>::iterator id_iter;
+	vector< vector<int> >::iterator row;
+	for(id_iter=id.begin(),row = dataset.begin(); row != dataset.end(); ++row,id_iter++)
 	{
 		// unique id 
 		counter++;
@@ -106,12 +117,14 @@ void HashTable::hashDataset(std::vector<std::vector<int>> &dataset, std::vector<
 				//vector v same size as current vector size for use in inner_product
 				normal_distr_generator(v,row->size());
 				//random pick of t in [0,w) , double
-				t = ((double)rand() / RAND_MAX) * w ;
+				t = ((double)rand() / (RAND_MAX + 1.0)) * w ;
 				// if (v.size() == 0)
 				// 	cout <<"***************SIZE OF V == 0******************"<<std::endl;
 				double in_product = std::inner_product(v.begin(), v.end(), row->begin(), 0);
 				//compute h(p)
+				cout <<"INPRODUCT "<<in_product<<std::endl;
 				h = ((in_product+t)/w);
+				cout <<"H IS "<<h<<std::endl;
 				//no overflow
 				if (!check_overflow(h))
 				{	
@@ -131,11 +144,7 @@ void HashTable::hashDataset(std::vector<std::vector<int>> &dataset, std::vector<
 		fi = ((std::inner_product(g.begin(), g.end(), r.begin(), 0))%M)%(this->num_of_buckets);
 		// make fi positive if not
 		if (fi<0)
-		{
-			// cout <<"Negative fi "<<fi<<std::endl;
 			fi = (((std::inner_product(g.begin(), g.end(), r.begin(), 0) % M + M) % M)%(this->num_of_buckets));
-			// cout <<"Fixed fi "<<fi<<std::endl;
-		}
 		// cout <<"FI= "<<fi<<std::endl;
 		// check for overflow
 		// while (!check_overflow(fi))
@@ -153,23 +162,26 @@ void HashTable::hashDataset(std::vector<std::vector<int>> &dataset, std::vector<
 		// 		fi = (((std::inner_product(g.begin(), g.end(), r.begin(), 0) % M + M) % M)%this->num_of_buckets);
 		// }
 		//insert id and point to hashTable at fi bucket
-		id = tmpstr + std::to_string(counter);
-		this->insertPoint(fi, id, *row,g);
+		// id = tmpstr + std::to_string(counter);
+		// cout <<id<<std::endl;
+		this->insertPoint(fi, *id_iter, *row,g);
 		g.erase(g.begin(), g.end());
 	}
 }
 
 // Cosine Similarity
-void HashTable::hashDataset(std::vector<std::vector<int>> &dataset, int k)
+void HashTable::hashDataset(std::vector<std::vector<int>> &dataset, std::vector<std::string> &id, int k)
 {
 	int h;
 	int counter = 0;
 	std::vector<int> g;
 	std::vector<double> v;
-	string tmpstr = "item_";
-	string id;
+	// string tmpstr = "item_";
+	// string id;
 
-	for(vector< vector<int> >::iterator row = dataset.begin(); row != dataset.end(); ++row)
+	std::vector<string>::iterator id_iter;
+	vector< vector<int> >::iterator row;
+	for(id_iter=id.begin(), row = dataset.begin(); row != dataset.end(); ++row,++id_iter)
 	{
 		counter++;
 		for (int i=0;i<k;i++)
@@ -190,8 +202,8 @@ void HashTable::hashDataset(std::vector<std::vector<int>> &dataset, int k)
 			v.erase(v.begin(),v.end());
 		}
 		long int position = binarytodecimal(g);
-		id = tmpstr + std::to_string(counter);
-		this->insertPoint(position, id, *row,g);
+		// id = tmpstr + std::to_string(counter);
+		this->insertPoint(position, *id_iter, *row,g);
 		g.erase(g.begin(), g.end());
 	}
 }
