@@ -29,10 +29,6 @@ void HashTable::setVals(int num)
 
 void HashTable::insertPoint(int bucket_num,string id,vector<int> &v,std::vector<int> g)
 {
-	cout <<"INSERTPOINT ";
-	for (std::vector<int>::iterator it=g.begin();it!=g.end();it++)
-		cout <<*it<<' ';
-	cout <<std::endl;
 	if (!this->buckets[bucket_num])
 		this->buckets[bucket_num] = new Buckets(id,v,g);
 	else
@@ -118,9 +114,9 @@ void HashTable::hashDataset(std::vector<std::vector<int>> &dataset, std::vector<
 				t = ((double)rand() / (RAND_MAX + 1.0)) * w ;
 				double in_product = std::inner_product(v.begin(), v.end(), row->begin(), 0);
 				//compute h(p)
-				cout <<"INPRODUCT "<<in_product<<std::endl;
+				// cout <<"INPRODUCT "<<in_product<<std::endl;
 				h = ((in_product+t)/w);
-				cout <<"H IS "<<h<<std::endl;
+				// cout <<"H IS "<<h<<std::endl;
 				//no overflow
 				if (!check_overflow(h))
 				{	

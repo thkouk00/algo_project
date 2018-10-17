@@ -71,15 +71,11 @@ void storeDataset(std::vector<std::vector<int>> &dataset, std::vector<std::strin
 void search_neighbors(HashTable **hashTables,std::vector<std::string> &id,std::vector<std::vector<int>> &queryset,int &L,int &k,int &w, int &num_of_buckets, double &Radius,bool Euclidean,std::ofstream &output)
 {
 	int counter=0;
-	// string str = "item_";
 	int tmpfi;
-	// long double dist = 0;
-	// std::vector<int> neighbor; 
 	std::vector<int> fi;
 	std::vector<int> query;
 	std::vector<int> tmpg; 
 	std::vector<std::vector<int>> g;
-	// string id;
 	string id_query;  
 
 	std::vector<string>::iterator id_iter;
@@ -87,9 +83,7 @@ void search_neighbors(HashTable **hashTables,std::vector<std::string> &id,std::v
 	for (id_iter=id.begin(), it=queryset.begin();it!=queryset.end();it++, id_iter++)
     {
     	counter++;
-    	// if (counter == 2)
-    	// 	break;
-    	// std::vector<int> neighbor; 
+    	 
     	query = *it;
 		// create L*fi hashFunctions and L*g Functions for every query
 		for (int i=0;i<L;i++)
@@ -98,10 +92,10 @@ void search_neighbors(HashTable **hashTables,std::vector<std::string> &id,std::v
 			find_hashFunction(tmpg, query, k, w, num_of_buckets, tmpfi,Euclidean);
 			g.push_back(tmpg);
 			fi.push_back(tmpfi);
-			cout <<"TMPG-FINDHASH "<<std::endl;
-			for (std::vector<int>::iterator g_iter=tmpg.begin();g_iter!=tmpg.end();g_iter++)
-				cout <<*g_iter<<' ';
-			cout <<std::endl;
+			// cout <<"TMPG-FINDHASH "<<std::endl;
+			// for (std::vector<int>::iterator g_iter=tmpg.begin();g_iter!=tmpg.end();g_iter++)
+			// 	cout <<*g_iter<<' ';
+			// cout <<std::endl;
 			tmpg.erase(tmpg.begin(),tmpg.end());
 		}
 
@@ -118,8 +112,9 @@ void search_neighbors(HashTable **hashTables,std::vector<std::string> &id,std::v
 		long double dist = 0;
 		string id;
 		
-		// //ApproxNN_search
-		NN_search(hashTables,g,query,fi,L,k,Euclidean,output);
+		if (Radius != 0)
+			//ApproxNN_search
+			NN_search(hashTables,g,query,fi,L,k,Euclidean,output);
 		// output <<"Approximate Nearest neighbor: "<<id<<std::endl;
 		// output <<"distanceLSH: "<<dist<<std::endl;
 
