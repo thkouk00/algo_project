@@ -84,15 +84,14 @@ Buckets* HashTable::access_bucket(int &position)
 }
 
 // Euclidean Distance
-void HashTable::hashDataset(std::vector<std::vector<int>> &dataset, std::vector<int> &r, std::vector<std::string> &id,int k, int w)
+// void HashTable::hashDataset(std::vector<std::vector<int>> &dataset, std::vector<int> &r, std::vector<std::string> &id,int k, int w)
+void HashTable::hashDataset(std::vector<std::vector<int>> &dataset, std::vector<std::string> &id,int k, int w)
 {
 	//must find position of bucket first
 	int counter=0;
 	int fi;
 	int h;
 	double t;
-	// string id;
-	// string tmpstr = "item_";
 	std::vector<double> v;
 	//holds all values from h
 	std::vector<int> g;
@@ -107,7 +106,6 @@ void HashTable::hashDataset(std::vector<std::vector<int>> &dataset, std::vector<
 	{
 		// unique id 
 		counter++;
-		// cout <<"-->COUNTER "<<counter<<"<--"<<std::endl;
 		//must do this k times and put results in g
 		for (int i=0;i<k;i++)
 		{	
@@ -118,8 +116,6 @@ void HashTable::hashDataset(std::vector<std::vector<int>> &dataset, std::vector<
 				normal_distr_generator(v,row->size());
 				//random pick of t in [0,w) , double
 				t = ((double)rand() / (RAND_MAX + 1.0)) * w ;
-				// if (v.size() == 0)
-				// 	cout <<"***************SIZE OF V == 0******************"<<std::endl;
 				double in_product = std::inner_product(v.begin(), v.end(), row->begin(), 0);
 				//compute h(p)
 				cout <<"INPRODUCT "<<in_product<<std::endl;
@@ -141,29 +137,17 @@ void HashTable::hashDataset(std::vector<std::vector<int>> &dataset, std::vector<
 		}
 
 		//compute fi , num_of_buckets = tablesize/4
-		fi = ((std::inner_product(g.begin(), g.end(), r.begin(), 0))%M)%(this->num_of_buckets);
-		// make fi positive if not
-		if (fi<0)
-			fi = (((std::inner_product(g.begin(), g.end(), r.begin(), 0) % M + M) % M)%(this->num_of_buckets));
-		// cout <<"FI= "<<fi<<std::endl;
-		// check for overflow
-		// while (!check_overflow(fi))
-		// {
-		// 	cout <<"**OVERFLOW**"<<std::endl;
-		// 	r.erase(r.begin(), r.end());
-		// 	for (int i=0;i<k;i++)
-		// 	{
-		// 		//rand between [0,100000) to avoid overflow again
-		// 		int num = rand() % 1000;
-		// 		r.push_back(num);
-		// 	}
-		// 	fi = ((std::inner_product(r.begin(), r.end(), g.begin(), 0))%M)%this->num_of_buckets;
-		// 	if (fi < 0)
-		// 		fi = (((std::inner_product(g.begin(), g.end(), r.begin(), 0) % M + M) % M)%this->num_of_buckets);
-		// }
+		// fi = ((std::inner_product(g.begin(), g.end(), r.begin(), 0))%M)%(this->num_of_buckets);
+		// // make fi positive if not
+		// if (fi<0)
+		// 	fi = (((std::inner_product(g.begin(), g.end(), r.begin(), 0) % M + M) % M)%(this->num_of_buckets));
+		std::hash<std::string> hash_fn;
+		string hashstr;
+		for (std::vector<int>::iterator g_iter=g.begin();g_iter!=g.end();g_iter++)
+			hashstr += to_string(*g_iter);
+		fi = hash_fn(hashstr) % num_of_buckets;
+
 		//insert id and point to hashTable at fi bucket
-		// id = tmpstr + std::to_string(counter);
-		// cout <<id<<std::endl;
 		this->insertPoint(fi, *id_iter, *row,g);
 		g.erase(g.begin(), g.end());
 	}
@@ -176,8 +160,6 @@ void HashTable::hashDataset(std::vector<std::vector<int>> &dataset, std::vector<
 	int counter = 0;
 	std::vector<int> g;
 	std::vector<double> v;
-	// string tmpstr = "item_";
-	// string id;
 
 	std::vector<string>::iterator id_iter;
 	vector< vector<int> >::iterator row;
@@ -189,7 +171,6 @@ void HashTable::hashDataset(std::vector<std::vector<int>> &dataset, std::vector<
 			//vector v same size as current vector size for use in inner_product
 			normal_distr_generator(v,row->size());
 			//random pick of t in [0,w) , double
-			// t = ((double)rand() / RAND_MAX) * w ;
 			double in_product = std::inner_product(v.begin(), v.end(), row->begin(), 0);
 			//compute h(p)
 			if (in_product>=0)
@@ -202,7 +183,6 @@ void HashTable::hashDataset(std::vector<std::vector<int>> &dataset, std::vector<
 			v.erase(v.begin(),v.end());
 		}
 		long int position = binarytodecimal(g);
-		// id = tmpstr + std::to_string(counter);
 		this->insertPoint(position, *id_iter, *row,g);
 		g.erase(g.begin(), g.end());
 	}

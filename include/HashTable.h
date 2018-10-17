@@ -30,7 +30,7 @@ public:
 	bool bucket_exist(int);
 	void printAll();
 	Buckets* access_bucket(int&);
-	void hashDataset(std::vector<std::vector<int>>&, std::vector<int>&, std::vector<std::string> &,int, int);
+	void hashDataset(std::vector<std::vector<int>>&, std::vector<std::string> &,int, int);
 	//overloading function
 	void hashDataset(std::vector<std::vector<int>>&, std::vector<std::string> &,int);
 

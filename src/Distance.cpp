@@ -17,6 +17,7 @@ long double Cosine_Similarity(std::vector<int> &A, std::vector<int> &B)
 
 	if (A.size() != B.size())
 	{
+		std::cout <<"Asize "<<A.size()<<" Bsize "<<B.size()<<std::endl;
 		throw std::logic_error("Vector A and Vector B are not the same size");
 	}
 

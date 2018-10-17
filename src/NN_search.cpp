@@ -7,7 +7,7 @@ using namespace std;
 using namespace std;
 
 
-void NN_search(HashTable **hashTables, std::vector<std::vector<int>> &g, std::vector<int> &query, std::vector<int> &fi, int &L, int &k, double &r, int &c, bool Cosine, std::ofstream &output)
+void NN_search(HashTable **hashTables, std::vector<std::vector<int>> &g, std::vector<int> &query, std::vector<int> &fi, int &L, int &k, bool Euclidean, std::ofstream &output)
 {
 	int tmpfi;
 	long double distance;
@@ -48,7 +48,7 @@ void NN_search(HashTable **hashTables, std::vector<std::vector<int>> &g, std::ve
 		{
 		
 			std::vector<int> p(it->get_p());
-			if (!Cosine)
+			if (Euclidean)
 				distance = Euclidean_Distance(query,p,k);
 			else
 				distance = Cosine_Similarity(query,p);

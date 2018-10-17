@@ -7,9 +7,6 @@
 #include "../include/HashTable.h"
 #include "../include/general_functions.h"
 
-#define EUCLIDEAN 0
-#define COSINE 1
-
 using namespace std;
 
 void Usage()
@@ -130,45 +127,24 @@ int main(int argc, char const *argv[])
 	//store dataset in memory for faster and multiple times access 
 	storeDataset(dataset, id,input_file, hashTable_lines,euclidean_flag,Radius);
 	std::cout <<endl<< "Number of lines in input file: " << hashTable_lines<<std::endl;;
-
-	cout <<"Ready to print"<<endl;
-
-	//print all elements of vector of vectors
-	// int count = 0;
-	// for(vector< vector<int> >::iterator row = dataset.begin(); row != dataset.end(); ++row)
-	// {
-	// 	count++;
-	// 	if (count != 5000)
-	// 		continue;
-	// 	for(vector<int>::iterator col = row->begin(); col != row->end(); ++col)
-	// 		cout << *col<<' ';
-	// 	cout <<std::endl; 
-	// }
     
     //number of buckets in each hash Table
-	int number_of_buckets = hashTable_lines/4;
-	std::vector<int> r;
+    int number_of_buckets;
+    if (euclidean_flag)
+		number_of_buckets = hashTable_lines/4;
+	else
+		number_of_buckets = pow(2,k);
 	
-    // use current time as seed for random generator
-	std::srand(std::time(nullptr)); 
-	//randomly pick k numbers for r , these values are same for every entry
-	for (int i=0;i<k;i++)
-	{
-		int num = rand() % 10 + (-10);
-		r.push_back(num);
-	}
-
-	// cout <<"HastTable creation"<<std::endl;
- //    //create L hash_tables
+    //create L hash_tables
 	HashTable **hashTables;	
 	hashTables = new HashTable*[L];
 	for (int i=0;i<L;i++)
 	{
 		hashTables[i] = new HashTable(number_of_buckets);
-		hashTables[i]->hashDataset(dataset,r,id,k,w);
+		hashTables[i]->hashDataset(dataset,id,k,w);
 	}
 	
-	// // ask user for query file and output file
+	// ask user for query file and output file
 	if (!query_file)
 	{
 		cout <<"Give query file: ";
@@ -190,57 +166,21 @@ int main(int argc, char const *argv[])
 	std::vector<std::vector<int>> queryset;
 	
 	id.erase(id.begin(),id.end());
-	// //store queryset in memory for faster and multiple times access 
+	
+	//store queryset in memory for faster and multiple times access 
 	storeDataset(queryset, id,query_file, queryset_lines,euclidean_flag,Radius);
-	cout <<"END QUERYSET STORE"<<std::endl;
+	cout <<"END QUERYSET STORE lines "<<queryset_lines<<std::endl;
 	std::ofstream outputfile;
 	outputfile.open (output_file, ios::out | ios::trunc);
 	
 	// outputfile <<"Euclidean Distance Results:"<<std::endl;
 	// search neighbors from query_file ***Euclidean Distance***
-	search_neighbors(hashTables, id, r, queryset, L, k, w, number_of_buckets, EUCLIDEAN, outputfile);
+	search_neighbors(hashTables, id, queryset, L, k, w, number_of_buckets, Radius,euclidean_flag, outputfile);
 	
-	// cout <<"QuerySet:"<<std::endl;
-	// for (std::vector<std::vector<int>>::iterator it=queryset.begin();it!=queryset.end();it++)
-	// {
-	// 	for (std::vector<int>::iterator iter=it->begin();iter!=it->end();iter++)
-	// 		cout <<*iter<<' ';
-	// 	cout <<std::endl;
-
-	// }
-	
-	//prepare id vector for new elements
-	// id.erase(id.begin(),id.end());
-	// number_of_buckets = pow(2,k);
-	// prepare hashtable for cosine similarity
-	// for (int i=0;i<L;i++)
-	// {
-	// 	delete hashTables[i];
-	// 	hashTables[i] = new HashTable(number_of_buckets);
-	// 	//prepare id vector to take new ids
-	// 	hashTables[i]->hashDataset(dataset,id,k);
-	// 	// hashTables[i]->printAll();
-	// }
-	// // delete[] hashTables;
-
-	// // HashTable **hTable;
-	// // hTable = new HashTable*[L];
-	// // for (int i=0;i<L;i++)
-	// // {
-	// // 	hTable[i] = new HashTable(number_of_buckets);
-	// // 	hTable[i]->hashDataset(dataset,k);
-	// // }
-		
-
-	// outputfile <<"Cosine Similarity Results:"<<std::endl;
-	// // //search neighbors from query_file ***Cosine Similarity***
-	// search_neighbors(hashTables,r,queryset,L,k,w,number_of_buckets, COSINE, outputfile);
-
-
 	//ask user to rerun program or not 
 
-	// outputfile.close();
-	// // //free memory
+	outputfile.close();
+	//free memory
 	for (int i=0;i<L;i++)
 		delete hashTables[i];
 	delete[] hashTables;
