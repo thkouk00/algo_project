@@ -152,8 +152,8 @@ void HashTable::hashDataset(std::vector<std::vector<int>> &dataset, std::vector<
 // Cosine Similarity
 void HashTable::hashDataset(std::vector<std::vector<int>> &dataset, std::vector<std::string> &id, int k)
 {
+	cout <<"ENTERING COSINE"<<std::endl;
 	int h;
-	int counter = 0;
 	std::vector<int> g;
 	std::vector<double> v;
 
@@ -161,7 +161,6 @@ void HashTable::hashDataset(std::vector<std::vector<int>> &dataset, std::vector<
 	vector< vector<int> >::iterator row;
 	for(id_iter=id.begin(), row = dataset.begin(); row != dataset.end(); ++row,++id_iter)
 	{
-		counter++;
 		for (int i=0;i<k;i++)
 		{		
 			//vector v same size as current vector size for use in inner_product
@@ -176,10 +175,10 @@ void HashTable::hashDataset(std::vector<std::vector<int>> &dataset, std::vector<
 
 			g.push_back(h);
 			//empty vector to take new values
-			v.erase(v.begin(),v.end());
+			v.clear();
 		}
 		long int position = binarytodecimal(g);
 		this->insertPoint(position, *id_iter, *row,g);
-		g.erase(g.begin(), g.end());
+		g.clear();
 	}
 }

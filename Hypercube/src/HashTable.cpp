@@ -2,13 +2,6 @@
 
 using namespace std;
 
-std::default_random_engine generator((unsigned int)time(0));
-int random(int n)
-{
-  std::uniform_int_distribution<int> distribution(0, n);
-  return distribution(generator);
-}
-
 HashTable::HashTable(int num): num_of_buckets(num)
 {
 	this->buckets = new Buckets*[this->num_of_buckets];
@@ -49,8 +42,14 @@ void HashTable::printBucket(int bucket_num)
 		cout <<"Bucket not initialized"<<std::endl;
 }
 
+int HashTable::get_num_of_buckets()
+{
+	return this->num_of_buckets;
+}
+
 void HashTable::printAll()
 {
+	cout <<"#Buckets "<<this->num_of_buckets<<std::endl;
 	int counter=0;		
 	for (int i=0;i<this->num_of_buckets;i++)
 	{
@@ -82,7 +81,7 @@ Buckets* HashTable::access_bucket(int &position)
 	if (this->buckets[position])
 		return this->buckets[position];
 	else
-		return (Buckets*)-1;
+		return NULL;
 }
 
 // Euclidean Distance
@@ -132,16 +131,17 @@ void HashTable::hashDataset(std::vector<std::vector<int>> &dataset, std::vector<
 			// not found
 			if (it == mymap.end())
 			{
-				cout <<"NOt found"<<std::endl;
+				// cout <<"NOt found"<<std::endl;
 				bin = random(1);
 				mymap[h] = bin;
+				// cout <<"H is "<<h<<" -> "<<bin<<std::endl;
 			}
 			else 
 			{
+				// cout <<"FOUND"<<std::endl;
 				// key found
 				bin = it->second;
-				cout <<"FOUND"<<std::endl;
-				cout <<"KEY "<<it->first<<" VALUE "<<it->second<<std::endl;
+				// cout <<"KEY "<<it->first<<" VALUE "<<it->second<<std::endl;
 			}
 			g.push_back(h);
 			tmpv.push_back(bin);
@@ -149,8 +149,10 @@ void HashTable::hashDataset(std::vector<std::vector<int>> &dataset, std::vector<
 			v.clear();
 			// v.erase(v.begin(),v.end());
 		}
+		// cout <<"BEFORE INSERT"<<std::endl;
 		//insert id and point to hashTable at fi bucket
 		this->insertPoint(binarytodecimal(tmpv), *id_iter, *row,g);
+		// cout <<"AFTER INSERT"<<std::endl;
 		g.clear();
 		tmpv.clear();
 		// g.erase(g.begin(), g.end());
@@ -160,6 +162,7 @@ void HashTable::hashDataset(std::vector<std::vector<int>> &dataset, std::vector<
 // Cosine Similarity
 void HashTable::hashDataset(std::vector<std::vector<int>> &dataset, std::vector<std::string> &id, int k)
 {
+	cout <<"ENTERING COSINE"<<std::endl;
 	int h;
 	int counter = 0;
 	std::vector<int> g;
@@ -184,10 +187,10 @@ void HashTable::hashDataset(std::vector<std::vector<int>> &dataset, std::vector<
 
 			g.push_back(h);
 			//empty vector to take new values
-			v.erase(v.begin(),v.end());
+			v.clear();
 		}
 		long int position = binarytodecimal(g);
 		this->insertPoint(position, *id_iter, *row,g);
-		g.erase(g.begin(), g.end());
+		g.clear();
 	}
 }

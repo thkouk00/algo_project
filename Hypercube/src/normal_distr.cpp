@@ -2,6 +2,14 @@
 
 using namespace std;
 
+std::default_random_engine generator((unsigned int)time(0));
+
+// uniform int distribution
+int random(int n)
+{
+  std::uniform_int_distribution<int> distribution(0, n);
+  return distribution(generator);
+}
 
 int binarytodecimal(std::vector<int> &g)
 {

@@ -44,13 +44,15 @@ void NN_search(HashTable **hashTables, std::vector<std::vector<int>> &g, std::ve
 		{
 		
 			std::vector<int> p(it->get_p());
-			// check if gs are same
-			std::vector<int> pq(it->get_g());
-			if (tmpg != pq)
-				continue;
 			
 			if (Euclidean)
+			{
+				// check if gs are same
+				std::vector<int> pq(it->get_g());
+				if (tmpg != pq)
+					continue;
 				distance = Euclidean_Distance(query,p,k);
+			}
 			else
 				distance = Cosine_Similarity(query,p);
 			// cout <<"Checking "<<it->get_id()<<" with distance "<<distance<<std::endl;

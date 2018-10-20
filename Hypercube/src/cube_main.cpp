@@ -8,14 +8,14 @@
 #include <vector>
 #include <list>
 #include <map>
-#include "../include/general_functions.h"
 #include "../include/HashTable.h"
+#include "../include/general_functions.h"
 
 using namespace std;
 
 void Usage()
 {
-	cerr <<"./lsh -d <input file> –q <query file> –k <int> -L <int> -ο <output file>"<<endl;
+	cerr <<"./lsh -d <input file> –q <query file> –k <int> -L <int> -w <int> -ο <output file>"<<endl;
 }
 
 int main(int argc, char const *argv[])
@@ -34,7 +34,7 @@ int main(int argc, char const *argv[])
 	{
 		if (!strcmp(argv[i],"-h"))
 		{
-			cout <<argv[0]<<" -d <input file> –q <query file> –k <int> -L <int> -ο <output file>"<<endl;
+			cout <<argv[0]<<" -d <input file> –q <query file> –k <int> -L <int> -w <int> -ο <output file>"<<endl;
 			exit(1);
 		}
 		else if (!strcmp(argv[i],"-d"))
@@ -108,6 +108,19 @@ int main(int argc, char const *argv[])
 				exit(1);
 			}
 		}
+		else if (!strcmp(argv[i],"-w"))
+		{
+			if (i+1 < argc)
+			{
+				w = atoi(argv[i+1]);
+				cout << "W: " << w << endl;
+			}
+			else
+			{
+				Usage();
+				exit(1);
+			}
+		}
 		else if (!strcmp(argv[i],"-o"))
 		{
 			if (i+1 < argc)	
@@ -150,12 +163,19 @@ int main(int argc, char const *argv[])
 	storeDataset(dataset, id,input_file, table_lines,euclidean_flag,Radius);
 	int number_of_vertices = pow(2,k); 	
 	cout <<"Table_lines "<<table_lines<<std::endl;
-	cout <<"Radius "<<Radius<<std::endl;
 	cout <<"Number of vertices "<<number_of_vertices<<std::endl;
 	
 	// hypercube structure to hold vertices
-	HashTable *cube = new HashTable[number_of_vertices];
-	cube->hashDataset(dataset, id, mymap, k, w);
+	HashTable *cube = new HashTable(number_of_vertices);
+	// (*cube)->printAll();
+	if (euclidean_flag)
+		cube->hashDataset(dataset, id, mymap, k, w);
+	else
+		cube->hashDataset(dataset, id, k);
+	// HashTable **cube = new HashTable*[1];
+	// *cube = new HashTable(number_of_vertices); 
+	// (*cube)->printAll();
+	// (*cube)->hashDataset(dataset, id, mymap, k, w);
 	
 	str.clear();
 	if (!query_file)
@@ -183,23 +203,16 @@ int main(int argc, char const *argv[])
 	std::vector<std::vector<int>> queryset;
 	id.clear();
 	storeDataset(queryset, id,query_file, queryset_lines,euclidean_flag,Radius);
-
+	cout <<"Radius "<<Radius<<std::endl;
 	std::ofstream outputfile;
 	outputfile.open (output_file, ios::out | ios::trunc);
 
 	// search neighbors from query_file ***Euclidean Distance***
-	search_neighbors(cube, id, queryset, M, probes,k, w, number_of_buckets, Radius,euclidean_flag, outputfile);
-
-
-
-
-
-
-
+	search_neighbors(cube, id, queryset, mymap, M, probes,k, w, number_of_vertices, Radius,euclidean_flag, outputfile);
 
 
 	
-	delete[] cube;
+	delete cube;
 	
 	return 0;
 }

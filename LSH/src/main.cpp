@@ -11,7 +11,7 @@ using namespace std;
 
 void Usage()
 {
-	cerr <<"./lsh -d <input file> –q <query file> –k <int> -L <int> -ο <output file>"<<endl;
+	cerr <<"./lsh -d <input file> –q <query file> –k <int> -L <int> -w <int> -ο <output file>"<<endl;
 }
 
 int main(int argc, char const *argv[])
@@ -19,8 +19,7 @@ int main(int argc, char const *argv[])
 	//default values
 	int k = 4;
 	int L = 5;
-	// int w = 4;
-	int w = 300;
+	int w = 4;
 	char *input_file = NULL;
 	char *query_file = NULL;
 	char *output_file = NULL;
@@ -29,7 +28,7 @@ int main(int argc, char const *argv[])
 	{
 		if (!strcmp(argv[i],"-h"))
 		{
-			cout <<argv[0]<<" -d <input file> –q <query file> –k <int> -L <int> -ο <output file>"<<endl;
+			cout <<argv[0]<<" -d <input file> –q <query file> –k <int> -L <int> -w <int> -ο <output file>"<<endl;
 			exit(1);
 		}
 		else if (!strcmp(argv[i],"-d"))
@@ -83,6 +82,19 @@ int main(int argc, char const *argv[])
 			{
 				L = atoi(argv[i+1]);
 				cout << "L: " << L << endl;
+			}
+			else
+			{
+				Usage();
+				exit(1);
+			}
+		}
+		else if (!strcmp(argv[i],"-w"))
+		{
+			if (i+1 < argc)
+			{
+				w = atoi(argv[i+1]);
+				cout << "W: " << w << endl;
 			}
 			else
 			{
@@ -144,7 +156,10 @@ int main(int argc, char const *argv[])
 		for (int i=0;i<L;i++)
 		{
 			hashTables[i] = new HashTable(number_of_buckets);
-			hashTables[i]->hashDataset(dataset,id,k,w);
+			if (euclidean_flag)
+				hashTables[i]->hashDataset(dataset,id,k,w);
+			else
+				hashTables[i]->hashDataset(dataset,id,k);
 		}
 		
 		// ask user for query file and output file
@@ -187,63 +202,6 @@ int main(int argc, char const *argv[])
 		{
 			answer.clear();
 			cout <<std::endl;
-			// cout <<"Press 1 -> New Input file"<<std::endl;
-			// cout <<"Press 2 -> New Query file"<<std::endl;
-			// cout <<"Press 3 -> New Input and Query file"<<std::endl;
-			// cin >> answer;
-			// if (!answer.compare("1"))
-			// {
-			// 	free(input_file);
-			// 	answer.clear();
-			// 	cout <<"Give input file: ";
-			// 	cin >> answer;
-			// 	input_file = (char *) malloc(answer.length()+1);
-			// 	strcpy(input_file,answer.c_str());
-			// }
-			// else if (!answer.compare("2"))
-			// {
-			// 	free(query_file);
-			// 	answer.clear();
-			// 	cout <<"Give query file: ";
-			// 	cin >> answer;
-			// 	query_file = (char *) malloc(answer.length()+1);
-			// 	strcpy(query_file,answer.c_str());
-			// }
-			// else if (!answer.compare("3"))
-			// {
-			// 	free(input_file);
-			// 	free(query_file);
-			// 	answer.clear();
-			// 	cout <<"Give input file: ";
-			// 	cin >> answer;
-			// 	input_file = (char *) malloc(answer.length()+1);
-			// 	strcpy(input_file,answer.c_str());
-			// 	answer.clear();
-			// 	cout <<"Give query file: ";
-			// 	cin >> answer;
-			// 	query_file = (char *) malloc(answer.length()+1);
-			// 	strcpy(query_file,answer.c_str());
-			// }
-			// else
-			// {
-			// 	cout <<"Choice not found...Ending program"<<std::endl;
-			// 	outputfile.close();
-			// 	//free memory
-			// 	for (int i=0;i<L;i++)
-			// 		delete hashTables[i];
-			// 	delete[] hashTables;
-
-			// 	free(input_file);
-			// 	free(query_file);
-			// 	free(output_file);
-			// 	break;
-			// }	
-			// outputfile.close();
-			// free(output_file);
-			// answer.clear();
-			// cout <<"Give output file: ";
-			// cin >> answer;
-			// strcpy(output_file,answer.c_str());
 		}
 		else
 		{
@@ -278,14 +236,6 @@ int main(int argc, char const *argv[])
 		output_file = NULL;
 		//ask user to rerun program or not 
 	}
-	// outputfile.close();
-	// //free memory
-	// for (int i=0;i<L;i++)
-	// 	delete hashTables[i];
-	// delete[] hashTables;
-
-	// free(input_file);
-	// free(query_file);
-	// free(output_file);
+	
 	return 0;
 }

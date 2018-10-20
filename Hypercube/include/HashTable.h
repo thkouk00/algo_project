@@ -27,6 +27,7 @@ public:
 	void setVals(int);
 	void insertPoint(int, std::string,std::vector<int>&, std::vector<int>);
 	void printBucket(int);
+	int get_num_of_buckets();
 	bool bucket_exist(int);
 	void printAll();
 	Buckets* access_bucket(int&);

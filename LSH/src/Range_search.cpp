@@ -35,13 +35,16 @@ void Range_search(HashTable **hashTables, std::vector<std::vector<int>> &g, std:
 		for (std::list<Node>::iterator it = List.begin(); it!=List.end(); it++)
 		{
 			std::vector<int> p(it->get_p());
-			// check if g(q) and q(p) are same
-			// std::vector<int> pq(it->get_g());
-			// if (tmpg != pq)
-			// 	continue;
+			
 			
 			if (Euclidean)
+			{
+				// check if g(q) and q(p) are same
+				std::vector<int> pq(it->get_g());
+				if (tmpg != pq)
+					continue;
 				distance = Euclidean_Distance(query,p,k);
+			}
 			else
 				distance = Cosine_Similarity(query,p);
 			if (distance < db)
