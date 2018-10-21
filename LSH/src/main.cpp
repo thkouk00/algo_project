@@ -234,6 +234,9 @@ int main(int argc, char const *argv[])
 		input_file = NULL;
 		query_file = NULL;
 		output_file = NULL;
+		int k = 4;
+		int L = 5;
+		int w = 4;
 		//ask user to rerun program or not 
 	}
 	
