@@ -65,19 +65,25 @@ void Range_search(HashTable *cube, std::vector<int> &g, std::vector<int> &query,
 		int passed=0;
 		for (std::list<Node>::iterator it = List.begin(); it!=List.end(); it++)
 		{
+			bool g_flag = 1;
 			std::vector<int> p(it->get_p());
 			
 			if (Euclidean)
 			{
-				// check if gs are same
-				std::vector<int> pq(it->get_g());
-				if (g != pq)
-					continue;
-
+				// find distance for trueNN_neighbor
 				distance = Euclidean_Distance(query,p,k);
+				std::vector<int> pq(it->get_g());
+				// check if g(q) and q(p) are same for Range_search
+				// if g's different flag = 0, else flag = 1
+				if (g != pq)
+					g_flag = 0;
+					// continue;
 			}
 			else
+			{
 				distance = Cosine_Similarity(query,p);
+				g_flag = 1;
+			}
 			if (distance < db)
 			{
 				b = p;
@@ -85,10 +91,13 @@ void Range_search(HashTable *cube, std::vector<int> &g, std::vector<int> &query,
 				pid = it->get_id();
 			}
 			
-			if (distance < R)
+			if (g_flag)
 			{
-				passed++;
-				output <<it->get_id()<<" -> distance "<<distance<<std::endl;
+				if (distance < R)
+				{
+					passed++;
+					output <<it->get_id()<<" -> distance "<<distance<<std::endl;
+				}
 			}
 			count_lines++;
 		}

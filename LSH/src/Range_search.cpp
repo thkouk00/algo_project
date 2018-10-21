@@ -25,7 +25,7 @@ void Range_search(HashTable **hashTables, std::vector<std::vector<int>> &g, std:
 			continue;
 		}
 		Buckets* bucket = hashTables[i]->access_bucket(tmpfi);
-		if (bucket == (Buckets*)-1)
+		if (bucket == NULL)
 			continue;
 		list<Node> List = bucket->access_list();
 		
@@ -34,19 +34,26 @@ void Range_search(HashTable **hashTables, std::vector<std::vector<int>> &g, std:
 		int passed=0;
 		for (std::list<Node>::iterator it = List.begin(); it!=List.end(); it++)
 		{
-			std::vector<int> p(it->get_p());
-			
+			bool g_flag = 1;
+			std::vector<int> p(it->get_p());  
 			
 			if (Euclidean)
 			{
-				// check if g(q) and q(p) are same
-				std::vector<int> pq(it->get_g());
-				if (tmpg != pq)
-					continue;
+				// find distance for trueNN_neighbor
 				distance = Euclidean_Distance(query,p,k);
+				std::vector<int> pq(it->get_g());
+				// check if g(q) and q(p) are same for Range_search
+				// if g's different flag = 0, else flag = 1
+				if (tmpg != pq)
+					g_flag = 0;
+					// continue;
 			}
 			else
+			{
 				distance = Cosine_Similarity(query,p);
+				g_flag = 1;
+			}
+
 			if (distance < db)
 			{
 				b = p;
@@ -54,11 +61,15 @@ void Range_search(HashTable **hashTables, std::vector<std::vector<int>> &g, std:
 				pid = it->get_id();
 			}
 			
-			if (distance < R)
+			if (g_flag)
 			{
-				passed++;
-				output <<it->get_id()<<" -> distance "<<distance<<std::endl;
+				if (distance < R)
+				{
+					passed++;
+					output <<it->get_id()<<" -> distance "<<distance<<std::endl;
+				}
 			}
+			// test purposes
 			count_lines++;
 		}
 		output <<"COUNT_LINES "<<count_lines<<" and passed "<<passed<<std::endl;

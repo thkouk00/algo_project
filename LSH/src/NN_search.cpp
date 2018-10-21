@@ -34,7 +34,7 @@ void NN_search(HashTable **hashTables, std::vector<std::vector<int>> &g, std::ve
 			continue;
 		}
 		Buckets* bucket = hashTables[i]->access_bucket(tmpfi);
-		if (bucket == (Buckets*)-1)
+		if (bucket == NULL)
 			continue;
 		list<Node> List = bucket->access_list();
 		
@@ -78,7 +78,7 @@ void NN_search(HashTable **hashTables, std::vector<std::vector<int>> &g, std::ve
 	averagetime += elapsed_time;
 	// cout <<"ApproxNN neighbor "<<pid<<" with distance "<<db<<std::endl;
 	// output <<"COUNT_LINES "<<count_lines<<" and passed "<<passed<<std::endl;
-	output <<"NN_SEARCH "<<pid<<std::endl;
+	output <<"ApproxNN_SEARCH "<<pid<<std::endl;
 	output <<"DISTANCE "<<db<<std::endl;
 	ApproxDist = db;
 	output <<"tLSH: "<<elapsed_time<<std::endl;

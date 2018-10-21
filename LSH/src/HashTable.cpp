@@ -76,7 +76,7 @@ Buckets* HashTable::access_bucket(int &position)
 	if (this->buckets[position])
 		return this->buckets[position];
 	else
-		return (Buckets*)-1;
+		return NULL;
 }
 
 // Euclidean Distance
