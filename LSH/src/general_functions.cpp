@@ -65,6 +65,7 @@ void storeDataset(std::vector<std::vector<int>> &dataset, std::vector<std::strin
 		
 		tmpv.erase(tmpv.begin(),tmpv.end());	
 		++hashTable_lines;
+		line.clear();
 	}
 }
 

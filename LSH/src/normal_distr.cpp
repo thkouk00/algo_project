@@ -2,25 +2,23 @@
 
 using namespace std;
 
-
-int binarytodecimal(std::vector<int> &g)
+unsigned int binarytodecimal(std::vector<int> &g)
 {
+  // for (auto it = g.begin();it!=g.end();it++)
+  //   cout <<*it<<' ';
+  // cout <<std::endl;
   string str;
-  long int n;
-  for (std::vector<int>::iterator it=g.begin();it!=g.end();it++)
-    str += std::to_string(*it);
-  n = atoi(str.c_str());
-  int decimalNumber = 0, i = 0, remainder;
-  while (n!=0)
+  long int decimalNumber = 0;
+  int i=0;
+  std::vector<int>::reverse_iterator rit;
+  for (rit = g.rbegin();rit!=g.rend();rit++)
   {
-      remainder = n%10;
-      n /= 10;
-      decimalNumber += remainder*pow(2,i);
-      ++i;
+    decimalNumber += *rit * pow(2, i);
+    i++;
   }
+  
   return decimalNumber;
 }
-
 
 // Function to check integer overflow 
 int check_overflow(int num) 

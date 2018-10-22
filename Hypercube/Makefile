@@ -36,4 +36,4 @@ cube_main.o:	./src/cube_main.cpp
 
 
 clean:	
-	rm -rf lsh output* *.o
+	rm -rf cube output* *.o

@@ -183,7 +183,8 @@ int main(int argc, char const *argv[])
 		int queryset_lines = 0;
 		std::vector<std::vector<int>> queryset;
 		
-		id.erase(id.begin(),id.end());
+		id.clear();
+		// id.erase(id.begin(),id.end());
 		
 		//store queryset in memory for faster and multiple times access 
 		storeDataset(queryset, id,query_file, queryset_lines,euclidean_flag,Radius);
@@ -223,7 +224,7 @@ int main(int argc, char const *argv[])
 		}
 
 		outputfile.close();
-		//free memory
+		// free memory
 		for (int i=0;i<L;i++)
 			delete hashTables[i];
 		delete[] hashTables;

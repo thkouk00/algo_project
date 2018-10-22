@@ -5,7 +5,7 @@ using namespace std;
 HashTable::HashTable(int num): num_of_buckets(num)
 {
 	this->buckets = new Buckets*[this->num_of_buckets];
-	for (int i=0;i<num_of_buckets;i++)
+	for (int i=0;i<this->num_of_buckets;i++)
 		this->buckets[i] = NULL;
 }
 
@@ -102,6 +102,7 @@ void HashTable::hashDataset(std::vector<std::vector<int>> &dataset, std::vector<
 	{
 		std::vector<int> tmpv;
 		//must do this k times and put results in g
+		cout <<"HASHDATASET k is "<<k<<std::endl;
 		for (int i=0;i<k;i++)
 		{	
 			//rerun generator in case of overflow
@@ -149,9 +150,11 @@ void HashTable::hashDataset(std::vector<std::vector<int>> &dataset, std::vector<
 			v.clear();
 			// v.erase(v.begin(),v.end());
 		}
-		// cout <<"BEFORE INSERT"<<std::endl;
+		cout <<"BEFORE INSERT"<<std::endl;
+		int pos = binarytodecimal(tmpv);
+		cout <<"Pos is "<<pos<<std::endl;
 		//insert id and point to hashTable at fi bucket
-		this->insertPoint(binarytodecimal(tmpv), *id_iter, *row,g);
+		this->insertPoint(pos, *id_iter, *row,g);
 		// cout <<"AFTER INSERT"<<std::endl;
 		g.clear();
 		tmpv.clear();
