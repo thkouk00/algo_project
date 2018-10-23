@@ -11,7 +11,7 @@ void Range_search(HashTable *cube, std::vector<int> &g, std::vector<int> &query,
 	std::vector<int> b;
 	string pid;
 
-	output <<"R-near neighbors:"<<std::endl;
+	output <<"R-near neighbors: "<<std::endl;
 	
 	bitset<32> hamming_distance;
 	// initial hamming distance
@@ -19,7 +19,6 @@ void Range_search(HashTable *cube, std::vector<int> &g, std::vector<int> &query,
 	bool neighbor_flag = 0;
 
 	clock_t begin = clock();
-	// must find way to calculate next vertex
 	for (int i=0;i<probes;i++)
 	{
 		if (i != 0)
@@ -60,30 +59,17 @@ void Range_search(HashTable *cube, std::vector<int> &g, std::vector<int> &query,
 			continue;
 		list<Node> List = bucket->access_list();
 		
-		output <<"Size of List is "<<List.size()<<" bucket "<<position<<std::endl;
-		int count_lines=0;
-		int passed=0;
 		for (std::list<Node>::iterator it = List.begin(); it!=List.end(); it++)
 		{
-			bool g_flag = 1;
 			std::vector<int> p(it->get_p());
 			
 			if (Euclidean)
-			{
 				// find distance for trueNN_neighbor
-				distance = Euclidean_Distance(query,p,k);
-				std::vector<int> pq(it->get_g());
-				// check if g(q) and q(p) are same for Range_search
-				// if g's different flag = 0, else flag = 1
-				if (g != pq)
-					g_flag = 0;
-					// continue;
-			}
+				distance = Euclidean_Distance(query,p);
 			else
-			{
 				distance = Cosine_Similarity(query,p);
-				g_flag = 1;
-			}
+
+			// trueNN
 			if (distance < db)
 			{
 				b = p;
@@ -91,24 +77,19 @@ void Range_search(HashTable *cube, std::vector<int> &g, std::vector<int> &query,
 				pid = it->get_id();
 			}
 			
-			if (g_flag)
+			//range 
+			if (distance < R)
 			{
-				if (distance < R)
-				{
-					passed++;
-					output <<it->get_id()<<" -> distance "<<distance<<std::endl;
-				}
+				output <<it->get_id()<<" -> distance "<<distance<<std::endl;
 			}
-			count_lines++;
 		}
-		output <<"COUNT_LINES "<<count_lines<<" and passed "<<passed<<std::endl;
-
 	}
 	clock_t end = clock();
-	double elapsed_time = (double)(end-begin)/CLOCKS_PER_SEC;
+	// measured in ms
+	double elapsed_time = 1000 * ((double)(end-begin)/CLOCKS_PER_SEC);
 
-	output <<"NN_search from range is "<<pid<<std::endl;
-	output <<"Distance is "<<db<<std::endl;
+	output <<"Nearest neighbor: "<<pid<<std::endl;
+	output <<"distanceTrue "<<db<<std::endl;
 	output <<"tTrue: "<<elapsed_time<<std::endl;
 	TrueDist = db;
 }

@@ -102,7 +102,6 @@ void HashTable::hashDataset(std::vector<std::vector<int>> &dataset, std::vector<
 	{
 		std::vector<int> tmpv;
 		//must do this k times and put results in g
-		cout <<"HASHDATASET k is "<<k<<std::endl;
 		for (int i=0;i<k;i++)
 		{	
 			//rerun generator in case of overflow
@@ -120,7 +119,6 @@ void HashTable::hashDataset(std::vector<std::vector<int>> &dataset, std::vector<
 				{	
 					//empty vector to take new values
 					v.erase(v.begin(),v.end());
-					cout <<"**OVERFLOW***"<<std::endl;
 				}
 				else
 					break;
@@ -132,40 +130,32 @@ void HashTable::hashDataset(std::vector<std::vector<int>> &dataset, std::vector<
 			// not found
 			if (it == mymap.end())
 			{
-				// cout <<"NOt found"<<std::endl;
 				bin = random(1);
 				mymap[h] = bin;
-				// cout <<"H is "<<h<<" -> "<<bin<<std::endl;
 			}
 			else 
 			{
-				// cout <<"FOUND"<<std::endl;
 				// key found
 				bin = it->second;
-				// cout <<"KEY "<<it->first<<" VALUE "<<it->second<<std::endl;
 			}
 			g.push_back(h);
 			tmpv.push_back(bin);
 			//empty vector to take new values
 			v.clear();
-			// v.erase(v.begin(),v.end());
 		}
-		cout <<"BEFORE INSERT"<<std::endl;
+		//convert binary number to decimal
 		int pos = binarytodecimal(tmpv);
-		cout <<"Pos is "<<pos<<std::endl;
-		//insert id and point to hashTable at fi bucket
+		//insert id and point to hashTable at pos bucket
+		// optional -> hold g that has all the h that mapped to {0,1}
 		this->insertPoint(pos, *id_iter, *row,g);
-		// cout <<"AFTER INSERT"<<std::endl;
 		g.clear();
 		tmpv.clear();
-		// g.erase(g.begin(), g.end());
 	}
 }
 
 // Cosine Similarity
 void HashTable::hashDataset(std::vector<std::vector<int>> &dataset, std::vector<std::string> &id, int k)
 {
-	cout <<"ENTERING COSINE"<<std::endl;
 	int h;
 	int counter = 0;
 	std::vector<int> g;

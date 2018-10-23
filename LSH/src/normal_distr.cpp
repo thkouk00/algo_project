@@ -4,9 +4,6 @@ using namespace std;
 
 unsigned int binarytodecimal(std::vector<int> &g)
 {
-  // for (auto it = g.begin();it!=g.end();it++)
-  //   cout <<*it<<' ';
-  // cout <<std::endl;
   string str;
   long int decimalNumber = 0;
   int i=0;

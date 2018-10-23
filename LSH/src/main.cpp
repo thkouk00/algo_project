@@ -184,16 +184,14 @@ int main(int argc, char const *argv[])
 		std::vector<std::vector<int>> queryset;
 		
 		id.clear();
-		// id.erase(id.begin(),id.end());
 		
 		//store queryset in memory for faster and multiple times access 
 		storeDataset(queryset, id,query_file, queryset_lines,euclidean_flag,Radius);
-		cout <<"END QUERYSET STORE lines "<<queryset_lines<<std::endl;
+		cout <<"Queryset lines "<<queryset_lines<<std::endl;
 		std::ofstream outputfile;
 		outputfile.open (output_file, ios::out | ios::trunc);
 		
-		// outputfile <<"Euclidean Distance Results:"<<std::endl;
-		// search neighbors from query_file ***Euclidean Distance***
+		// search neighbors from query_file
 		search_neighbors(hashTables, id, queryset, L, k, w, number_of_buckets, Radius,euclidean_flag, outputfile);
 		
 		string answer;

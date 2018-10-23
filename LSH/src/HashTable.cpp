@@ -80,7 +80,6 @@ Buckets* HashTable::access_bucket(int &position)
 }
 
 // Euclidean Distance
-// void HashTable::hashDataset(std::vector<std::vector<int>> &dataset, std::vector<int> &r, std::vector<std::string> &id,int k, int w)
 void HashTable::hashDataset(std::vector<std::vector<int>> &dataset, std::vector<std::string> &id,int k, int w)
 {
 	//must find position of bucket first
@@ -100,8 +99,6 @@ void HashTable::hashDataset(std::vector<std::vector<int>> &dataset, std::vector<
 	vector< vector<int> >::iterator row;
 	for(id_iter=id.begin(),row = dataset.begin(); row != dataset.end(); ++row,id_iter++)
 	{
-		// unique id 
-		counter++;
 		//must do this k times and put results in g
 		for (int i=0;i<k;i++)
 		{	
@@ -114,29 +111,22 @@ void HashTable::hashDataset(std::vector<std::vector<int>> &dataset, std::vector<
 				t = ((double)rand() / (RAND_MAX + 1.0)) * w ;
 				double in_product = std::inner_product(v.begin(), v.end(), row->begin(), 0);
 				//compute h(p)
-				// cout <<"INPRODUCT "<<in_product<<std::endl;
 				h = ((in_product+t)/w);
-				// cout <<"H IS "<<h<<std::endl;
 				//no overflow
 				if (!check_overflow(h))
 				{	
 					//empty vector to take new values
-					v.erase(v.begin(),v.end());
-					cout <<"**OVERFLOW***"<<std::endl;
+					v.clear();
 				}
 				else
 					break;
 			}
 			g.push_back(h);
 			//empty vector to take new values
-			v.erase(v.begin(),v.end());
+			v.clear();
 		}
 
 		//compute fi , num_of_buckets = tablesize/4
-		// fi = ((std::inner_product(g.begin(), g.end(), r.begin(), 0))%M)%(this->num_of_buckets);
-		// // make fi positive if not
-		// if (fi<0)
-		// 	fi = (((std::inner_product(g.begin(), g.end(), r.begin(), 0) % M + M) % M)%(this->num_of_buckets));
 		std::hash<std::string> hash_fn;
 		string hashstr;
 		for (std::vector<int>::iterator g_iter=g.begin();g_iter!=g.end();g_iter++)
@@ -145,14 +135,13 @@ void HashTable::hashDataset(std::vector<std::vector<int>> &dataset, std::vector<
 
 		//insert id and point to hashTable at fi bucket
 		this->insertPoint(fi, *id_iter, *row,g);
-		g.erase(g.begin(), g.end());
+		g.clear();
 	}
 }
 
 // Cosine Similarity
 void HashTable::hashDataset(std::vector<std::vector<int>> &dataset, std::vector<std::string> &id, int k)
 {
-	cout <<"ENTERING COSINE"<<std::endl;
 	int h;
 	std::vector<int> g;
 	std::vector<double> v;

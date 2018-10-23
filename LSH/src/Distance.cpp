@@ -1,12 +1,13 @@
 #include "../include/Distance.h"
 
-long double Euclidean_Distance(std::vector<int> & A, std::vector<int> &B,int &k)
+long double Euclidean_Distance(std::vector<int> & A, std::vector<int> &B)
 {
  	long double sum = 0;
- 	for(unsigned int i = 0;i<A.size();i++){
- 		sum += pow((A[i] - B[i]),k);
+ 	for(unsigned int i = 0;i<A.size();i++)
+ 	{
+ 		sum += pow((double)(A[i] - B[i]),2);
  	}
- 	return pow(sum,1.0/k);
+ 	return sqrtl(sum);
 };
 
 long double Cosine_Similarity(std::vector<int> &A, std::vector<int> &B)

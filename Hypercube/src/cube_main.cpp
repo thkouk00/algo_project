@@ -5,6 +5,7 @@
 #include <fstream>
 #include <sstream>
 #include <cmath>
+#include <tgmath.h>
 #include <vector>
 #include <list>
 #include <map>
@@ -21,7 +22,7 @@ void Usage()
 int main(int argc, char const *argv[])
 {
 	//default values
-	int k = 3;
+	int k = -1;
 	int w = 4;
 	int M = 10;
 	int probes = 2;
@@ -139,16 +140,6 @@ int main(int argc, char const *argv[])
 		}
 	}
 	
-	// map values to {0,1}
-	// std::map<int,bool> mymap;
-	// std::map<int,bool>::iterator it;
-
-	// std::vector<std::string> id;
-	// std::vector<std::vector<int>> dataset;
-	// bool euclidean_flag = 1;
-	// double Radius = 0.0;
-	// int table_lines = 0;
-
 	while(1)
 	{
 		std::map<int,bool> mymap;
@@ -172,13 +163,14 @@ int main(int argc, char const *argv[])
 		}
 		
 		storeDataset(dataset, id,input_file, table_lines,euclidean_flag,Radius);
+		if (k == -1)
+			k = (int)log2(table_lines);
 		int number_of_vertices = pow(2,k); 	
 		cout <<"Table_lines "<<table_lines<<std::endl;
 		cout <<"Number of vertices "<<number_of_vertices<<std::endl;
 		
 		// hypercube structure to hold vertices
 		HashTable *cube = new HashTable(number_of_vertices);
-		// (*cube)->printAll();
 		if (euclidean_flag)
 			cube->hashDataset(dataset, id, mymap, k, w);
 		else
@@ -210,7 +202,6 @@ int main(int argc, char const *argv[])
 		std::vector<std::vector<int>> queryset;
 		id.clear();
 		storeDataset(queryset, id,query_file, queryset_lines,euclidean_flag,Radius);
-		cout <<"Radius "<<Radius<<std::endl;
 		std::ofstream outputfile;
 		outputfile.open (output_file, ios::out | ios::trunc);
 
@@ -255,7 +246,7 @@ int main(int argc, char const *argv[])
 		mymap.clear();
 		dataset.clear();
 		id.clear();
-		int k = 3;
+		int k = -1;
 		int w = 4;
 		int M = 10;
 		int probes = 2;

@@ -14,6 +14,4 @@
 
 void Range_search(HashTable **, std::vector<std::vector<int>>&, std::vector<int>&, std::vector<int>&, int &, int &, double&, bool, std::ofstream&, double&);
 
-
-
 #endif

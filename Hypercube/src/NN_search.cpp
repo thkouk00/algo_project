@@ -2,7 +2,6 @@
 
 using namespace std;
 
-
 void NN_search(HashTable *cube, std::vector<int> &g, std::vector<int> &query, int &position, int &M, int &probes ,int &k, bool Euclidean, std::ofstream &output, double &ApproxDist, double &averagetime)
 {
 	int tmpfi;
@@ -12,12 +11,11 @@ void NN_search(HashTable *cube, std::vector<int> &g, std::vector<int> &query, in
 	long double db = 9999999.0;
 	string pid;
 	
-
-	output <<"ApproxNN neighbors:"<<std::endl;
 	bitset<32> hamming_distance;
 	// initial hamming distance
 	int h_dist = 1;
 	bool neighbor_flag = 0;
+	bool trick_used = 0;
 	// points searched
 	int count_lines=1;
 	clock_t begin = clock();
@@ -44,10 +42,10 @@ void NN_search(HashTable *cube, std::vector<int> &g, std::vector<int> &query, in
 						if (!(cube->bucket_exist(tmp_pos)))
 							continue;
 						
-						output <<"Initial position "<<position<<std::endl;
+						// output <<"Initial position "<<position<<std::endl;
 						position = tmp_pos;
 						neighbor_flag = 1;
-						output <<"Position to neighbor vertex "<<position<<std::endl;
+						// output <<"Position to neighbor vertex "<<position<<std::endl;
 						break;
 					}
 				}
@@ -57,29 +55,20 @@ void NN_search(HashTable *cube, std::vector<int> &g, std::vector<int> &query, in
 			}
 		}
 		if (!(cube->bucket_exist(position)))
-		{
-			cout <<"*****MPIKA*****"<<std::endl;
 			continue;
-		}
+		
 		Buckets* bucket = cube->access_bucket(position);
 		if (bucket == NULL)
 			continue;
 		list<Node> List = bucket->access_list();
 		
-		output <<"Size of List is "<<List.size()<<" bucket "<<position<<std::endl;
 		for (std::list<Node>::iterator it = List.begin(); it!=List.end(); it++)
 		{
 		
 			std::vector<int> p(it->get_p());
 			
 			if (Euclidean)
-			{
-				std::vector<int> pq(it->get_g());
-				if (g != pq)
-					continue;
-				
-				distance = Euclidean_Distance(query,p,k);
-			}
+				distance = Euclidean_Distance(query,p);
 			else
 				distance = Cosine_Similarity(query,p);
 		
@@ -93,19 +82,20 @@ void NN_search(HashTable *cube, std::vector<int> &g, std::vector<int> &query, in
 			//trick
 			if (count_lines == M)
 			{
-				cout <<"TRICK USED"<<std::endl;
+				trick_used = 1;
 				break;
 			}
 			count_lines++;	
 		}
+		if (trick_used)
+			break;
 	}
 	clock_t end = clock();
-	double elapsed_time = (double)(end-begin)/CLOCKS_PER_SEC;
+	//measured in ms
+	double elapsed_time = 1000 * ((double)(end-begin)/CLOCKS_PER_SEC);
 	averagetime += elapsed_time;
-	// cout <<"ApproxNN neighbor "<<pid<<" with distance "<<db<<std::endl;
-	// output <<"COUNT_LINES "<<count_lines<<" and passed "<<passed<<std::endl;
-	output <<"NN_SEARCH "<<pid<<std::endl;
-	output <<"DISTANCE "<<db<<std::endl;
+	output <<"ANearest neighbor: "<<pid<<std::endl;
+	output <<"distanceLSH: "<<db<<std::endl;
 	ApproxDist = db;
 	output <<"tLSH: "<<elapsed_time<<std::endl;
 }

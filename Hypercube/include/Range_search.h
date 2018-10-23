@@ -7,6 +7,7 @@
 #include <list>
 #include <string.h>
 #include <stdlib.h>
+#include <chrono>
 #include "../include/HashTable.h"
 #include "../include/Buckets.h"
 #include "../include/Distance.h"

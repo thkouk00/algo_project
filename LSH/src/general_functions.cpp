@@ -36,8 +36,6 @@ void storeDataset(std::vector<std::vector<int>> &dataset, std::vector<std::strin
 			}
 			else if (!str.compare("Radius:") || !str.compare("radius:") )
 			{
-				// cout <<str<<std::endl;
-				
 				iss >> Radius;
 				cout <<"Radius "<<Radius<<std::endl;
 				count_lines++;
@@ -47,9 +45,7 @@ void storeDataset(std::vector<std::vector<int>> &dataset, std::vector<std::strin
 			{
 				// default metric -> euclidean
 				euclidean_flag = 1;
-				cout <<"3rd choice Euclidean"<<std::endl;
 				count_lines++;
-				// hashTable_lines++;
 			}
 		}
 		id.push_back(str);
@@ -93,26 +89,14 @@ void search_neighbors(HashTable **hashTables,std::vector<std::string> &id,std::v
 		// create L*fi hashFunctions and L*g Functions for every query
 		for (int i=0;i<L;i++)
 		{
-			// std::vector<int> tmpg; 
 			find_hashFunction(tmpg, query, k, w, num_of_buckets, tmpfi,Euclidean);
 			g.push_back(tmpg);
 			fi.push_back(tmpfi);
-			// cout <<"TMPG-FINDHASH "<<std::endl;
-			// for (std::vector<int>::iterator g_iter=tmpg.begin();g_iter!=tmpg.end();g_iter++)
-			// 	cout <<*g_iter<<' ';
-			// cout <<std::endl;
 			tmpg.erase(tmpg.begin(),tmpg.end());
 		}
 
-		//NN_search
-		// NN_search(neighbor,hashTables,g,query,fi,L,k,dist,id,1,Cosine);
-		
-		// id_query = str+ std::to_string(counter);
 		output <<std::endl<<"******************************************************************************************************************"<<std::endl;
-		// output <<"Query: "<<id_query<<std::endl;
 		output <<"Query: "<<*id_iter<<std::endl;
-		// output <<"True Nearest neighbor: "<<id<<std::endl;
-		// output <<"distanceTrue: "<<dist<<std::endl;
 		
 		long double dist = 0;
 		string id;
@@ -128,23 +112,18 @@ void search_neighbors(HashTable **hashTables,std::vector<std::string> &id,std::v
 				double tmpfraction = ApproxDist/TrueDist; 
 				if (tmpfraction > maxfraction)
 				{
-					cout <<"BEFORE FR: "<<maxfraction<<" AFTER FR: "<<tmpfraction<<std::endl;
 					maxfraction = tmpfraction;
 				}
 			}
 			
 		}
-		// output <<"Approximate Nearest neighbor: "<<id<<std::endl;
-		// output <<"distanceLSH: "<<dist<<std::endl;
-
-		
 		query.erase(query.begin(),query.end());
 		g.erase(g.begin(),g.end());
 		fi.erase(fi.begin(),fi.end());
 	}
+	output <<std::endl<<"Final Statistics:"<<std::endl;
 	output <<"Max fraction: "<<maxfraction<<std::endl;
 	output <<"Average Time of ApproxSearch: "<<averageApproxtime/(queryset.size())<<std::endl;
-	output <<"SIZE IS "<<queryset.size()<<std::endl;
 }
 
 int find_hashFunction(std::vector<int> &g, std::vector<int> &query, int &k, int &w, int &num_of_buckets, int &fi, bool Euclidean)
@@ -154,13 +133,8 @@ int find_hashFunction(std::vector<int> &g, std::vector<int> &query, int &k, int 
 	int h;
 	double t;
 	std::vector<double> v;
-	//holds all values from h
-	// std::vector<int> g;
-	// std::vector<int> r;
-	int M = (int)(pow(2, 32)) - 5;
 	for (int i=0;i<k;i++)
 	{
-		// std::vector<double> v;
 		//rerun generator in case of overflow
 		while (1)
 		{	
@@ -180,8 +154,7 @@ int find_hashFunction(std::vector<int> &g, std::vector<int> &query, int &k, int 
 				if (!check_overflow(h))
 				{	
 					//empty vector to take new values
-					v.erase(v.begin(),v.end());
-					cout <<"**OVERFLOW***"<<std::endl;
+					v.clear();
 				}
 				else
 					break;
@@ -197,7 +170,7 @@ int find_hashFunction(std::vector<int> &g, std::vector<int> &query, int &k, int 
 		}
 		g.push_back(h);
 		//empty vector to take new values
-		v.erase(v.begin(),v.end());
+		v.clear();
 	}
 	if (Euclidean)
 	{
@@ -207,11 +180,6 @@ int find_hashFunction(std::vector<int> &g, std::vector<int> &query, int &k, int 
 			hashstr += to_string(*it);
 
 		fi = hash_fn(hashstr) % num_of_buckets;
-		// //compute fi , num_of_buckets = tablesize/4
-		// fi = (std::inner_product(g.begin(), g.end(), r.begin(), 0)%M)%num_of_buckets;
-		// if (fi<0)
-		// 	fi = (((std::inner_product(g.begin(), g.end(), r.begin(), 0) % M + M) % M)%num_of_buckets);
-
 	}
 	else
 		fi = binarytodecimal(g);

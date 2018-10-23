@@ -3,10 +3,6 @@ using namespace std;
 
 Node::Node(string str,vector<int> &v,std::vector<int> g):id(str),p(v),g(g)
 {
-	// cout <<"INSERTPOINTNODE ";
-	// for (std::vector<int>::iterator it=g.begin();it!=g.end();it++)
-	// 	cout <<*it<<' ';
-	// cout <<std::endl;
 	
 }
 

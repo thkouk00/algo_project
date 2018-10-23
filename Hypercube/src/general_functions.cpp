@@ -20,8 +20,6 @@ void storeDataset(std::vector<std::vector<int>> &dataset, std::vector<std::strin
 		iss >> str;
 		if (count_lines == 0)
 		{
-			
-			
 			if ( !str.compare("Euclidean") || !str.compare("euclidean") )
 			{
 				euclidean_flag = 1;
@@ -36,8 +34,6 @@ void storeDataset(std::vector<std::vector<int>> &dataset, std::vector<std::strin
 			}
 			else if (!str.compare("Radius:") || !str.compare("radius:") )
 			{
-				// cout <<str<<std::endl;
-				
 				iss >> Radius;
 				cout <<"Radius "<<Radius<<std::endl;
 				count_lines++;
@@ -47,9 +43,7 @@ void storeDataset(std::vector<std::vector<int>> &dataset, std::vector<std::strin
 			{
 				// default metric -> euclidean
 				euclidean_flag = 1;
-				cout <<"3rd choice Euclidean"<<std::endl;
 				count_lines++;
-				// hashTable_lines++;
 			}
 		}
 		id.push_back(str);
@@ -88,16 +82,10 @@ void search_neighbors(HashTable *cube,std::vector<std::string> &id,std::vector<s
 		find_hashFunction(g, query, mymap, k, w, num_of_buckets, position,Euclidean);
 		
 		output <<std::endl<<"******************************************************************************************************************"<<std::endl;
-		// output <<"Query: "<<id_query<<std::endl;
 		output <<"Query: "<<*id_iter<<std::endl;
-		// output <<"True Nearest neighbor: "<<id<<std::endl;
-		// output <<"distanceTrue: "<<dist<<std::endl;
 		
 		long double dist = 0;
 		string id;
-		
-		// output <<"Approximate Nearest neighbor: "<<id<<std::endl;
-		// output <<"distanceLSH: "<<dist<<std::endl;
 
 		Range_search(cube,g,query,position,M,probes,k,Radius,Euclidean,output,TrueDist);
 		
@@ -110,8 +98,8 @@ void search_neighbors(HashTable *cube,std::vector<std::string> &id,std::vector<s
 				double tmpfraction = ApproxDist/TrueDist; 
 				if (tmpfraction > maxfraction)
 				{
-					cout <<"ApproxDist "<<ApproxDist<<" TrueDist "<<TrueDist<<std::endl;
-					cout <<"BEFORE FR: "<<maxfraction<<" AFTER FR: "<<tmpfraction<<std::endl;
+					// cout <<"ApproxDist "<<ApproxDist<<" TrueDist "<<TrueDist<<std::endl;
+					// cout <<"BEFORE FR: "<<maxfraction<<" AFTER FR: "<<tmpfraction<<std::endl;
 					maxfraction = tmpfraction;
 				}
 			}
@@ -120,9 +108,10 @@ void search_neighbors(HashTable *cube,std::vector<std::string> &id,std::vector<s
 		query.clear();
 		g.clear();
 	}
+	output <<std::endl<<"Final Statistics:"<<std::endl;
 	output <<"Max fraction: "<<maxfraction<<std::endl;
 	output <<"Average Time of ApproxSearch: "<<averageApproxtime/(queryset.size())<<std::endl;
-	output <<"SIZE IS "<<queryset.size()<<std::endl;
+	// output <<"SIZE IS "<<queryset.size()<<std::endl;
 }
 
 int find_hashFunction(std::vector<int> &g, std::vector<int> &query, std::map<int,bool> &mymap, int &k, int &w, int &num_of_buckets, int &position, bool Euclidean)
@@ -153,7 +142,6 @@ int find_hashFunction(std::vector<int> &g, std::vector<int> &query, std::map<int
 				{	
 					//empty vector to take new values
 					v.clear();
-					cout <<"**OVERFLOW***"<<std::endl;
 				}
 				else
 				{

@@ -6,7 +6,7 @@
 #include <cmath>
 #include <numeric>
 
-long double Euclidean_Distance(std::vector<int>&, std::vector<int>&, int&);
+long double Euclidean_Distance(std::vector<int>&, std::vector<int>&);
 long double Cosine_Similarity(std::vector<int>&, std::vector<int>&);
 
 #endif
