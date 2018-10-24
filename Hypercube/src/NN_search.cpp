@@ -21,6 +21,8 @@ void NN_search(HashTable *cube, std::vector<int> &g, std::vector<int> &query, in
 	clock_t begin = clock();
 	for (int i=0;i<probes;i++)
 	{
+		if (i > 1)
+			break;
 		if (i != 0)
 		{
 			int y;

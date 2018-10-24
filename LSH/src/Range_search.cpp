@@ -49,6 +49,7 @@ void Range_search(HashTable **hashTables, std::vector<std::vector<int>> &g, std:
 				g_flag = 1;
 			}
 
+			//trueNN
 			if (distance < db)
 			{
 				b = p;

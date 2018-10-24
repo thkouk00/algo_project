@@ -29,6 +29,7 @@ public:
 	void printBucket(int);
 	bool bucket_exist(int);
 	void printAll();
+	int get_num_of_buckets();
 	Buckets* access_bucket(int&);
 	void hashDataset(std::vector<std::vector<int>>&, std::vector<std::string> &,int, int);
 	//overloading function

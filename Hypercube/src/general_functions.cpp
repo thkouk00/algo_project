@@ -80,19 +80,21 @@ void search_neighbors(HashTable *cube,std::vector<std::string> &id,std::vector<s
     	 
 		query = *it; 
 		find_hashFunction(g, query, mymap, k, w, num_of_buckets, position,Euclidean);
-		
+		int TmpPos = position;
+
 		output <<std::endl<<"******************************************************************************************************************"<<std::endl;
 		output <<"Query: "<<*id_iter<<std::endl;
 		
 		long double dist = 0;
 		string id;
 
-		Range_search(cube,g,query,position,M,probes,k,Radius,Euclidean,output,TrueDist);
+		Range_search(cube,g,query,TmpPos,M,probes,k,Radius,Euclidean,output,TrueDist);
 		
 		if (Radius != 0)
 		{
+			TmpPos = position;
 			//ApproxNN_search
-			NN_search(cube,g,query,position,M,probes,k,Euclidean,output,ApproxDist,averageApproxtime);
+			NN_search(cube,g,query,TmpPos,M,probes,k,Euclidean,output,ApproxDist,averageApproxtime);
 			if (ApproxDist != 9999999.0 && TrueDist != 9999999.0 && TrueDist != 0)
 			{
 				double tmpfraction = ApproxDist/TrueDist; 
@@ -104,7 +106,7 @@ void search_neighbors(HashTable *cube,std::vector<std::string> &id,std::vector<s
 				}
 			}
 		}
-
+		TrueDist = 0;
 		query.clear();
 		g.clear();
 	}

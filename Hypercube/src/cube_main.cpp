@@ -139,9 +139,10 @@ int main(int argc, char const *argv[])
 			}
 		}
 	}
-	
 	while(1)
 	{
+		long long int memeusage = 0;
+		
 		std::map<int,bool> mymap;
 		std::map<int,bool>::iterator it;
 
@@ -176,6 +177,21 @@ int main(int argc, char const *argv[])
 		else
 			cube->hashDataset(dataset, id, k);
 		
+		//count memory
+		memeusage += id.size() * sizeof(string) + sizeof(std::vector<string>);
+		memeusage += sizeof(cube) + sizeof(Buckets*)*number_of_vertices;
+
+		for (int y=0;y<cube->get_num_of_buckets();y++)
+		{
+			memeusage += sizeof(Buckets*);
+			Buckets *b = cube->access_bucket(y);
+			if (b != NULL)
+				memeusage += b->bucket_size() * (sizeof(std::vector<int>)+ k*sizeof(int) + sizeof(std::vector<int>&) + sizeof(string)) + sizeof(list<Node>);
+		}
+
+		//count memory
+		memeusage += dataset.size() * (sizeof(std::vector<int>) + (sizeof(std::vector<int>) * dataset[0].size()) );
+		
 		str.clear();
 		if (!query_file)
 		{
@@ -207,6 +223,12 @@ int main(int argc, char const *argv[])
 
 		// search neighbors from query_file ***Euclidean Distance***
 		search_neighbors(cube, id, queryset, mymap, M, probes,k, w, number_of_vertices, Radius,euclidean_flag, outputfile);
+
+		//count memory
+		memeusage += sizeof(mymap) + mymap.size() * (sizeof(int) + sizeof(bool));
+		memeusage += queryset.size() * (sizeof(std::vector<int>) + (sizeof(std::vector<int>) * queryset[0].size()) );
+		memeusage += id.size() * sizeof(string) + sizeof(std::vector<string>);
+		cout <<"Memory usage: "<<memeusage<<std::endl;
 
 		string answer;
 		cout <<"Do you want to rerun program? Y/N : ";

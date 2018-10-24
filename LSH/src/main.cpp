@@ -122,6 +122,8 @@ int main(int argc, char const *argv[])
 
 	while(1)
 	{
+		long long int memeusage = 0;
+
 		string str;
 		if (!input_file)
 		{
@@ -150,6 +152,10 @@ int main(int argc, char const *argv[])
 		else
 			number_of_buckets = pow(2,k);
 		
+		// count memory
+		memeusage += id.size() * sizeof(string) + sizeof(std::vector<string>);
+		memeusage += sizeof(HashTable*)*L;
+	    
 	    //create L hash_tables
 		HashTable **hashTables;	
 		hashTables = new HashTable*[L];
@@ -160,8 +166,22 @@ int main(int argc, char const *argv[])
 				hashTables[i]->hashDataset(dataset,id,k,w);
 			else
 				hashTables[i]->hashDataset(dataset,id,k);
+
+			//count memory
+			memeusage += sizeof(hashTables[i]) + sizeof(Buckets*)*number_of_buckets;
+
+			for (int y=0;y<hashTables[i]->get_num_of_buckets();y++)
+			{
+				memeusage += sizeof(Buckets*);
+				Buckets *b = hashTables[i]->access_bucket(y);
+				if (b != NULL)
+					memeusage += b->bucket_size() * (sizeof(std::vector<int>)+ k*sizeof(int) + sizeof(std::vector<int>&) + sizeof(string)) + sizeof(list<Node>);
+			}
 		}
 		
+		//count memory
+		memeusage += dataset.size() * (sizeof(std::vector<int>) + (sizeof(std::vector<int>) * dataset[0].size()) );
+
 		// ask user for query file and output file
 		if (!query_file)
 		{
@@ -194,6 +214,11 @@ int main(int argc, char const *argv[])
 		// search neighbors from query_file
 		search_neighbors(hashTables, id, queryset, L, k, w, number_of_buckets, Radius,euclidean_flag, outputfile);
 		
+		//count memory
+		memeusage += queryset.size() * (sizeof(std::vector<int>) + (sizeof(std::vector<int>) * queryset[0].size()) );
+		memeusage += id.size() * sizeof(string) + sizeof(std::vector<string>);
+		cout <<"Memory usage: "<<memeusage<<std::endl;
+
 		string answer;
 		cout <<"Do you want to rerun program? Y/N : ";
 		cin >> answer;

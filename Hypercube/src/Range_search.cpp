@@ -21,6 +21,8 @@ void Range_search(HashTable *cube, std::vector<int> &g, std::vector<int> &query,
 	clock_t begin = clock();
 	for (int i=0;i<probes;i++)
 	{
+		if (i > 1)
+			break;
 		if (i != 0)
 		{
 			int y;
@@ -64,7 +66,6 @@ void Range_search(HashTable *cube, std::vector<int> &g, std::vector<int> &query,
 			std::vector<int> p(it->get_p());
 			
 			if (Euclidean)
-				// find distance for trueNN_neighbor
 				distance = Euclidean_Distance(query,p);
 			else
 				distance = Cosine_Similarity(query,p);
@@ -77,10 +78,13 @@ void Range_search(HashTable *cube, std::vector<int> &g, std::vector<int> &query,
 				pid = it->get_id();
 			}
 			
-			//range 
-			if (distance < R)
+			if (R != 0)
 			{
-				output <<it->get_id()<<" -> distance "<<distance<<std::endl;
+				//range 
+				if (distance < R)
+				{
+					output <<it->get_id()<<" -> distance "<<distance<<std::endl;
+				}
 			}
 		}
 	}

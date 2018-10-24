@@ -43,6 +43,11 @@ void HashTable::printBucket(int bucket_num)
 		cout <<"Bucket not initialized"<<std::endl;
 }
 
+int HashTable::get_num_of_buckets()
+{
+	return this->num_of_buckets;
+}
+
 void HashTable::printAll()
 {
 	int counter=0;		
