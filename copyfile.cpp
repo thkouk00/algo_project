@@ -38,28 +38,13 @@ int main(int argc, char const *argv[])
 		std::vector<int> tmpv;
 
 		int val;
-		// iss >> str;
-		// cout <<"STR is "<<str<<std::endl;
+		
 		output <<"item_"<<counter<<' ';
 		// output <<"query_"<<counter<<' ';
-		// iss >> val;
-		// while (!iss.eof())
-		// {
-		// 	output <<val<<' ';
-		// 	// cout <<val<<' ';
-		// 	// tmpv.push_back(val);
-		// 	iss >> val;
-		// }
+		
 		output <<line;
 		output <<std::endl;
-		//cout <<std::endl;
-		// dataset.push_back(tmpv);
-		// // cout <<"**********START INFO**********"<<std::endl;
-		// // cout <<"Size dataset: "<<dataset.size()<<std::endl;
-		// // cout <<"Size tmpv: "<<tmpv.size()<<" and line "<<hashTable_lines+1<<std::endl; 
-		// // cout <<"**********END INFO**********"<<std::endl;
-		// tmpv.erase(tmpv.begin(),tmpv.end());
-		//       ++hashTable_lines;
     }
+    output.close();
 	return 0;
 }
